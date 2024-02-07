@@ -1926,7 +1926,6 @@ function startBird() {
   let animationId;
 
   function update() {
-    console.log('bird update')
     animationId = requestAnimationFrame(update);
     if (gameOver || isPaused) {
       return;
