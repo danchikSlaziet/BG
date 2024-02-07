@@ -2,16 +2,45 @@
 let isSnakeStarted = false;
 let resetSnake;
 
+let isRunnerStarted = false;
+let stopRunner;
+let restartRunner;
 
+let isBirdStarted = false;
+let isBirdGameOver = false;
+let resetBirdGame;
+let startBirdGame;
+let restartBirdGame;
+
+let BrandSwiper;
+let AchieveSwiper;
+function parseQuery(queryString) {
+  let query = {};
+  let pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+  for (let i = 0; i < pairs.length; i++) {
+      let pair = pairs[i].split('=');
+      query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+  }
+  return query;
+}
+function initSwipers() {
+  BrandSwiper = new Swiper('.brand-swiper', {
+    slidesPerView: 'auto',
+  });
+  AchieveSwiper = new Swiper('.achieve-swiper', {
+    slidesPerView: 'auto',
+  });
+}
 document.addEventListener('DOMContentLoaded', () => {
-  const BrandSwiper = new Swiper('.brand-swiper', {
-    spaceBetween: 12,
-    slidesPerView: 'auto'
-  });
-  const AchieveSwiper = new Swiper('.achieve-swiper', {
-    spaceBetween: 11,
-    slidesPerView: 'auto'
-  });
+  let app = window.Telegram.WebApp;
+  let query = app.initData;
+  let user_data_str = parseQuery(query).user;
+  let user_data = JSON.parse(user_data_str);
+  userData = user_data;
+  app.expand();
+  app.ready();
+  userChatId = user_data["id"];
+  initSwipers();
 });
 const firstBrandPage = document.querySelector('.brand-first');
 const gamesArray = firstBrandPage.querySelectorAll('.brand-first__game-full');
@@ -20,11 +49,13 @@ const backSecondBrandPage = secondBrandPage.querySelector('.brand-second__back')
 const secondBrandTitle = secondBrandPage.querySelector('.brand-second__title');
 const secondBrandPlay = secondBrandPage.querySelector('.brand-second__play-btn');
 const snakePage = document.querySelector('.snake');
-const puzzlePage = document.querySelector('.puzzle')
+const puzzlePage = document.querySelector('.puzzle');
+const runnerPage = document.querySelector('.runner');
+const birdPage = document.querySelector('.bird');
 
 gamesArray.forEach((elem, index) => {
   elem.addEventListener('click', () => {
-    if (index !== gamesArray.length - 1) {
+    if (index !== gamesArray.length - 1 && index !== gamesArray.length - 2) {
       secondBrandTitle.textContent = elem.querySelector('.brand-first__game-title').textContent;
       firstBrandPage.classList.remove('brand-first_active');
       secondBrandPage.classList.add('brand-second_active');
@@ -46,6 +77,10 @@ function swipeRight() {
   secondBrandPage.classList.remove('brand-second_active');
 }
 secondBrandPlay.addEventListener('click', () => {
+  setTimeout(() => {
+    BrandSwiper.destroy();
+    AchieveSwiper.destroy();
+  }, 500)
   if (secondBrandTitle.textContent.trim() === 'Змейка') {
     secondBrandPage.classList.remove('brand-second_active');
     snakePage.classList.add('snake_active');
@@ -62,7 +97,57 @@ secondBrandPlay.addEventListener('click', () => {
     puzzlePage.classList.add('puzzle_active');
     startPuzzle();
   }
+  if (secondBrandTitle.textContent.trim() === 'Раннер') {
+    secondBrandPage.classList.remove('brand-second_active');
+    runnerPage.classList.add('runner_active');
+    if (isRunnerStarted) {
+      pausePage.classList.remove('pause-page_active');
+      scorePage.classList.remove('score-page_active');
+      restartPage.classList.remove('restart-page_active');
+      resetRunner();
+    }
+    else {
+      isRunnerStarted = true;
+      [stopRunner, resetRunner] = startRunner();
+    }
+  }
+  if (secondBrandTitle.textContent.trim() === 'Птичка') {
+    secondBrandPage.classList.remove('brand-second_active');
+    birdPage.classList.add('bird_active');
+
+    startPage.classList.add('start-page_active');
+    if (isBirdStarted) {
+      startPage.classList.remove('start-page_active');
+      gameOverPage.classList.remove('game-over_active');
+      startBirdGame();
+    }
+    else {
+      isBirdStarted = true;
+      [resetBirdGame, restartBirdGame, startBirdGame] = startBird();
+    }
+  }
 });
+
+runnerPage.querySelector('.runner__back').addEventListener('click', () => {
+  secondBrandPage.classList.add('brand-second_active');
+  runnerPage.classList.remove('runner_active');
+  stopRunner();
+  initSwipers();
+});
+
+puzzlePage.querySelector('.puzzle__back').addEventListener('click', () => {
+  puzzlePage.classList.remove('puzzle_active');
+  secondBrandPage.classList.add('brand-second_active');
+  resetPuzzleGame();
+  initSwipers();
+});
+
+birdPage.querySelector('.game-over__back').addEventListener('click', () => {
+  birdPage.classList.remove('bird_active');
+  secondBrandPage.classList.add('brand-second_active');
+  resetBirdGame();
+  initSwipers();
+})
 
 // ==================== SNAKE CODE ===================
 let dom_canvas = document.createElement("canvas");
@@ -83,6 +168,7 @@ function startSnake() {
   const settingsPageButton = settingsPage.querySelector('.settings-page__button');
   const settingsPageSpeed = settingsPage.querySelector('#speed');
   document.querySelector('.snake__back').addEventListener('click', () => {
+    initSwipers();
     secondBrandPage.classList.add('brand-second_active');
     snakePage.classList.remove('snake_active');
     pause();
@@ -182,15 +268,6 @@ function startSnake() {
     infoPage.classList.remove('info-page_active');
     setTimeout(() => { continiue(); }, 400)
   });
-
-  // document.addEventListener('click', (evt) => {
-  //   console.log(evt.currentTarget)
-  //   if (evt.target.className.includes('info-page_active')) {
-  //     infoPage.classList.remove('info-page_active');
-  //     continiue();
-  //   }
-  // });
-
   let detect = new MobileDetect(window.navigator.userAgent);
 
   if (detect.os() == null) {
@@ -340,73 +417,77 @@ function startSnake() {
       this.ArrowLeft = false;
     },
     listenMobile() {
-      addEventListener(
-        "touchstart",
-        (e) => {
-          if (e.target.id === "ArrowUp" && this.ArrowDown) { console.log(1); return };
-          if (e.target.id === "ArrowDown" && this.ArrowUp) return;
-          if (e.target.id === "ArrowLeft" && this.ArrowRight) return;
-          if (e.target.id === "ArrowRight" && this.ArrowLeft) return;
-          switch (e.target.id) {
-            case "ArrowUp":
-              this.ArrowUp = true;
-              break;
-            case "ArrowDown":
-              this.ArrowDown = true;
-              break;
-            case "ArrowLeft":
-              this.ArrowLeft = true;
-              break;
-            case "ArrowRight":
-              this.ArrowRight = true;
-              break;
-            default:
-              break;
-          }
-          Object.keys(this)
-            .filter((f) => f !== e.target.id && f !== "listenMobile" && f !== "resetState")
-            .forEach((k) => {
-              this[k] = false;
-            });
-        },
-        false
-      );
-      addEventListener(
-        "keydown",
-        (e) => {
-          let directionName;
-          if (e.key === "w" && this.ArrowDown) return;
-          if (e.key === "s" && this.ArrowUp) return;
-          if (e.key === "a" && this.ArrowRight) return;
-          if (e.key === "d" && this.ArrowLeft) return;
-          switch (e.key) {
-            case "w":
-              this.ArrowUp = true;
-              directionName = 'ArrowUp';
-              break;
-            case "s":
-              this.ArrowDown = true;
-              directionName = 'ArrowDown';
-              break;
-            case "a":
-              this.ArrowLeft = true;
-              directionName = 'ArrowLeft';
-              break;
-            case "d":
-              this.ArrowRight = true;
-              directionName = 'ArrowRight';
-              break;
-            default:
-              break;
-          }
-          Object.keys(this)
-            .filter((f) => f !== directionName && f !== "listenMobile" && f !== "resetState")
-            .forEach((k) => {
-              this[k] = false;
-            });
-        },
-        false
-      );
+      if (detect.os() == null) {
+        let directionName;
+        addEventListener(
+          "keydown",
+          (e) => {
+            if (e.key === "w" && this.ArrowDown) return;
+            if (e.key === "s" && this.ArrowUp) return;
+            if (e.key === "a" && this.ArrowRight) return;
+            if (e.key === "d" && this.ArrowLeft) return;
+            switch (e.key) {
+              case "w":
+                this.ArrowUp = true;
+                directionName = 'ArrowUp';
+                break;
+              case "s":
+                this.ArrowDown = true;
+                directionName = 'ArrowDown';
+                break;
+              case "a":
+                this.ArrowLeft = true;
+                directionName = 'ArrowLeft';
+                break;
+              case "d":
+                this.ArrowRight = true;
+                directionName = 'ArrowRight';
+                break;
+              default:
+                break;
+            }
+            Object.keys(this)
+              .filter((f) => f !== directionName && f !== "listenMobile" && f !== "resetState")
+              .forEach((k) => {
+                this[k] = false;
+              });
+          },
+          false
+        );
+      }
+      else {
+        addEventListener(
+          "touchstart",
+          (e) => {
+            if (e.target.id === "ArrowUp" && this.ArrowDown) return;
+            if (e.target.id === "ArrowDown" && this.ArrowUp) return;
+            if (e.target.id === "ArrowLeft" && this.ArrowRight) return;
+            if (e.target.id === "ArrowRight" && this.ArrowLeft) return;
+            switch (e.target.id) {
+              case "ArrowUp":
+                this.ArrowUp = true;
+                break;
+              case "ArrowDown":
+                this.ArrowDown = true;
+                break;
+              case "ArrowLeft":
+                this.ArrowLeft = true;
+                break;
+              case "ArrowRight":
+                this.ArrowRight = true;
+                break;
+              default:
+                break;
+            }
+            Object.keys(this)
+              .filter((f) => f !== e.target.id && f !== "listenMobile" && f !== "resetState")
+              .forEach((k) => {
+                this[k] = false;
+              });
+          },
+          false
+        );
+      }
     }
   };
 
@@ -717,8 +798,25 @@ function startSnake() {
 }
 
 // ==================== PUZZLE CODE ==============
-function startPuzzle() {
-  // константы (Узлы)
+
+const PUZZLE_HOVER_TINT = "#009900";
+const img = new Image();
+const canvas = document.querySelector("#canvas-puzzle");
+const stage = canvas.getContext("2d");
+let difficulty = 2;
+let pieces;
+let puzzleWidth;
+let puzzleHeight;
+let pieceWidth;
+let pieceHeight;
+let currentPiece;
+let currentDropPiece;
+let mouse;
+
+img.width = 350;
+img.height = 500;
+
+// константы (Узлы)
 const firstPage = document.querySelector('.first-page');
 const firstPageButton = firstPage.querySelector('.first-page__subtitle');
 const toolTip = firstPage.querySelector('.first-page__tooltip');
@@ -730,7 +828,13 @@ const secondPageButton = secondPage.querySelector('.second-page__button');
 const mainPage = document.querySelector('.main-page');
 const mainPageNext = document.querySelector('.main-page__next');
 
+function resetPuzzleGame() {
+  firstPage.classList.add('first-page_active');
+  secondPage.classList.remove('second-page_active');
+  mainPage.classList.remove('main-page_active');
+}
 
+function startPuzzle() {
 // код переключения меж страничками
 setTimeout(() => {
   if (firstPage.className.includes('active')) {
@@ -742,6 +846,8 @@ firstPageButton.addEventListener('click', () => {
   firstPage.classList.remove('first-page_active');
   secondPage.classList.add('second-page_active');
 });
+
+img.addEventListener("load", onImage, false);
 
 secondPageItems.forEach((elem, index) => {
   elem.addEventListener("click", () => {
@@ -772,23 +878,6 @@ secondPageButton.addEventListener("click", () => {
 
 
 // ======================== GAME CODE ========================
-
-const PUZZLE_HOVER_TINT = "#009900";
-const img = new Image();
-const canvas = document.querySelector("#canvas-puzzle");
-const stage = canvas.getContext("2d");
-let difficulty = 2;
-let pieces;
-let puzzleWidth;
-let puzzleHeight;
-let pieceWidth;
-let pieceHeight;
-let currentPiece;
-let currentDropPiece;
-let mouse;
-img.addEventListener("load", onImage, false);
-img.width = 350;
-img.height = 500;
 
 function initPuzzle() {
   pieces = [];
@@ -1095,10 +1184,1056 @@ function onTouchMove(e) {
 
 function onTouchEnd(e) {
   e.preventDefault();
-  // pieceDropped(e);
 }
 document.onpointerdown = shufflePuzzle;
 canvas.addEventListener("touchstart", onTouchStart);
 canvas.addEventListener("touchmove", onTouchMove);
 canvas.addEventListener("touchend", onTouchEnd);
+}
+
+// ======================= RUNNER GAME ===================
+const pausePage = document.querySelector('.pause-page');
+const scorePage = document.querySelector('.score-page');
+const restartPage = document.querySelector('.restart-page');
+
+function startRunner() {
+  let carWidth = 201 * 0.14;
+  let carHeight = 512 * 0.14;
+  let obstacleCount = 3;
+  let coinGenerationTimeout;
+  let scoreCount = 0;
+  let detect = new MobileDetect(window.navigator.userAgent);
+  const pauseBtn = document.querySelector('.pause');
+  const pausePageContinue = pausePage.querySelector('.pause-page__btn_continue');
+  const pausePageRestart = pausePage.querySelector('.pause-page__btn_restart');
+  const arrowLeft = document.querySelector('.arrow-btn_left');
+  const arrowRight = document.querySelector('.arrow-btn_right');
+  const score = document.querySelector('.score');
+  const scoreButton = scorePage.querySelector('.score-page__btn');
+  const scorePageText = scorePage.querySelector('.score-page__text');
+  const restartButton = restartPage.querySelector('.restart-page__btn');
+
+  class Road {
+    constructor(image, y) {
+      this.x = 0;
+      this.y = y;
+      this.loaded = false;
+
+      this.image = new Image();
+
+      var obj = this;
+
+      this.image.addEventListener("load", function () {
+        obj.loaded = true;
+      });
+
+      this.image.src = image;
+    }
+
+    Update(road) {
+      this.y += speed; //The image will move down with every frame
+
+      if (this.y > window.innerHeight) {
+        this.y = road.y - canvas.height + speed;
+      }
+    }
+  }
+
+  class Car {
+    constructor(image, x, y, isPlayer) {
+      this.x = x;
+      this.y = y;
+      this.loaded = false;
+      this.dead = false;
+      this.paused = false;
+      this.isPlayer = isPlayer;
+
+      this.image = new Image();
+
+      var obj = this;
+
+      this.image.addEventListener("load", function () {
+        obj.loaded = true;
+      });
+
+      this.image.src = image;
+    }
+
+    Update() {
+      if (!this.isPlayer) {
+        this.y += speed;
+      }
+
+      if (this.y > canvas.height + 50) {
+        this.dead = true;
+      }
+    }
+
+    Collide(car) {
+      var hit = false;
+
+      if (
+        this.y < car.y + car.image.height * scale &&
+        this.y + this.image.height * scale > car.y
+      ) {
+        // If there is collision by y
+        if (
+          this.x + this.image.width * scale > car.x &&
+          this.x < car.x + car.image.width * scale
+        ) {
+          // If there is collision by x
+          hit = true;
+        }
+      }
+
+      return hit;
+    }
+
+    // Move(v, direction) {
+    //   if (v == "x") {
+    //     const step = canvas.width / 3;
+    //     // Moving on x
+    //     if (direction == "left") {
+    //       if (this.x < 130) {
+    //         return;
+    //       } else {
+    //         this.x -= step;
+    //       }
+    //     }
+    //     if (direction == "right") {
+    //       this.x += step;
+    //     }
+
+    //     // Rolling back the changes if the car left the screen
+    //     if (this.x + this.image.width * scale > canvas.width) {
+    //       this.x -= step;
+    //     }
+
+    //     if (this.x < 0) {
+    //       this.x = 0;
+    //     }
+    //   }
+    // }
+    Move(v, direction, speedMultiplier = 6) {
+      if (v == "x" && !this.isAnimating) {
+        this.isAnimating = true;
+
+        const targetX = (direction == "left") ? Math.max(0, this.x - canvas.width / 3) :
+          Math.min(canvas.width - this.image.width * scale, this.x + canvas.width / 3);
+
+        // Check if the car is in the extreme lanes
+        if ((this.x <= 130 && direction == "left") || (this.x + this.image.width * scale > canvas.width * 0.8 && direction == "right")) {
+          this.isAnimating = false;
+          return;
+        }
+
+        const step = (targetX - this.x > 0) ? canvas.width / 200 * speedMultiplier : -canvas.width / 200 * speedMultiplier;
+
+        const move = () => {
+          if ((direction == "left" && this.x > targetX) || (direction == "right" && this.x < targetX)) {
+            this.x += step;
+
+            if ((direction == "left" && this.x <= targetX) || (direction == "right" && this.x >= targetX)) {
+              this.x = targetX;
+              this.isAnimating = false;
+            } else {
+              requestAnimationFrame(move);
+            }
+          }
+        };
+
+        move();
+      }
+    }
+  }
+
+  class Coin {
+    constructor(image, x, y) {
+      this.x = x;
+      this.y = y;
+      this.loaded = false;
+      this.dead = false;
+
+      this.image = new Image();
+
+      var obj = this;
+
+      this.image.addEventListener("load", function () {
+        obj.loaded = true;
+      });
+
+      this.image.src = image;
+    }
+
+    Update() {
+      this.y += speed;
+
+      if (this.y > canvas.height + 50) {
+        this.dead = true;
+      }
+    }
+
+    Collide(car) {
+      var hit = false;
+
+      if (
+        this.y < car.y + car.image.height * scale &&
+        this.y + this.image.height * scale > car.y
+      ) {
+        // If there is collision by y
+        if (
+          this.x + this.image.width * scale > car.x &&
+          this.x < car.x + car.image.width * scale
+        ) {
+          // If there is collision by x
+          hit = true;
+        }
+      }
+
+      return hit;
+    }
+  }
+
+  var coins = [];
+
+  var canvas = document.getElementById("canvas-runner"); // Getting the canvas from DOM
+  var ctx = canvas.getContext("2d"); // Getting the context to work with the canvas
+
+  var scale = 0.13; // Cars scale
+
+  Resize(); // Changing the canvas size on startup
+
+  window.addEventListener("resize", Resize); // Change the canvas size with the window size
+
+  // Forbidding opening the context menu to make the game play better on mobile devices
+  canvas.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+    return false;
+  });
+
+  window.addEventListener("keydown", function (e) {
+    KeyDown(e);
+  }); // Listening for keyboard events
+  arrowLeft.addEventListener("touchstart", () => {
+    ButtonDown("left");
+  });
+  arrowRight.addEventListener("touchstart", () => {
+    ButtonDown("right");
+  });
+  if (detect.os() == null) {
+    arrowLeft.addEventListener("click", () => {
+      ButtonDown("left");
+    });
+    arrowRight.addEventListener("click", () => {
+      ButtonDown("right");
+    });
+  }
+
+  var objects = []; // Game objects
+
+  var roads = [
+    new Road("./assets/runner/images/road.png", 0),
+    new Road("./assets/runner/images/road.png", canvas.height),
+  ]; // Backgrounds
+  var player = new Car(
+    "./assets/runner/images/car.png",
+    canvas.width / 2 - carWidth,
+    canvas.height / 2,
+    true
+  ); // Player's object
+  var speed = 6;
+
+  Start();
+
+  var animationId;
+
+  function Start() {
+    if (!player.dead) {
+      animationId = requestAnimationFrame(Update);
+    }
+  }
+
+  function Stop() {
+    cancelAnimationFrame(animationId);
+    clearTimeout(obstacleGenerationTimeout);
+    clearTimeout(coinGenerationTimeout);
+    animationId = null;
+    obstacleGenerationTimeout = null;
+    coinGenerationTimeout = null;
+  }
+
+  function random1to3() {
+    // случайное число от 1 до 3
+    let rand = 1 + Math.random() * (3 + 1 - 1);
+    return Math.floor(rand);
+  }
+
+  function randomLane() {
+    const lane = random1to3();
+    if (lane === 1) {
+      return canvas.width / 6 - carWidth;
+    }
+    if (lane === 2) {
+      return canvas.width / 2 - carWidth;
+    }
+    if (lane === 3) {
+      return 2 * (canvas.width / 3) + canvas.width / 6 - carWidth;
+    }
+  }
+
+  // ... (предыдущий код)
+
+  function generateObstacle() {
+    if (objects.length < obstacleCount) {
+      const lane = random1to3();
+      const obstacleX = (lane === 1) ? canvas.width / 6 - carWidth :
+        (lane === 2) ? canvas.width / 2 - carWidth :
+          2 * (canvas.width / 3) + canvas.width / 6 - carWidth;
+
+      const obstacleY = getRandomHeight();
+
+      if (!objects.some(obstacle => Math.abs(obstacle.x - obstacleX) < carWidth &&
+        Math.abs(obstacle.y - obstacleY) < carHeight) &&
+        !coins.some(coin => Math.abs(coin.x - obstacleX) < carWidth &&
+          Math.abs(coin.y - obstacleY) < carHeight)) {
+        objects.push(
+          new Car(
+            "./assets/runner/images/car_red.png",
+            obstacleX,
+            -700,
+            false
+          )
+        );
+      }
+    }
+
+    obstacleGenerationTimeout = setTimeout(generateObstacle, 1000); // Задержка в миллисекундах между генерациями
+  }
+
+  function generateCoin() {
+    if (coins.length < obstacleCount) {
+      const lane = random1to3();
+      const coinX = (lane === 1) ? canvas.width / 6 - carWidth :
+        (lane === 2) ? canvas.width / 2 - carWidth :
+          2 * (canvas.width / 3) + canvas.width / 6 - carWidth;
+
+      const coinY = getRandomHeight();
+
+      if (!coins.some(coin => Math.abs(coin.x - coinX) < carWidth &&
+        Math.abs(coin.y - coinY) < carHeight) &&
+        !objects.some(obstacle => Math.abs(obstacle.x - coinX) < carWidth &&
+          Math.abs(obstacle.y - coinY) < carHeight))
+        coins.push(
+          new Coin(
+            "./assets/runner/images/coin.png",
+            coinX,
+            RandomInteger(250, 400) * -1
+          )
+        );
+
+    }
+
+    coinGenerationTimeout = setTimeout(generateCoin, 1000); // Задержка в миллисекундах между генерациями
+  }
+
+  function getRandomHeight() {
+    return -canvas.height * 0.5 + Math.random() * (canvas.height * 0.5);
+  }
+
+  function RandomInteger(min, max) {
+    let rand = min - 0.5 + Math.random() * (max - min + 1);
+    return Math.round(rand);
+  }
+
+  var obstacleGenerationTimeout;
+
+
+  function Update() {
+    roads[0].Update(roads[1]);
+    roads[1].Update(roads[0]);
+
+    if (!obstacleGenerationTimeout) {
+      generateObstacle(); // Запуск первой генерации
+    }
+    generateCoin();
+
+    player.Update();
+
+    if (player.dead) {
+      Stop();
+    }
+    else if (player.paused) {
+      Stop();
+    }
+
+    let isDead = false;
+
+    let isCoinDead = false;
+
+    for (let i = 0; i < objects.length; i++) {
+      objects[i].Update();
+
+      if (objects[i].dead) {
+        isDead = true;
+      }
+    }
+
+    if (isDead) {
+      objects.shift();
+    }
+
+    for (let i = 0; i < coins.length; i++) {
+      coins[i].Update();
+
+      if (coins[i].dead) {
+        isCoinDead = true;
+      }
+    }
+
+    if (isCoinDead) {
+      coins.shift();
+    }
+
+    let hit = false;
+
+    for (let i = 0; i < objects.length; i++) {
+      hit = player.Collide(objects[i]);
+
+      if (hit) {
+        Stop();
+        player.dead = true;
+        restartPage.classList.add('restart-page_active');
+        break;
+      }
+    }
+
+    for (let i = 0; i < coins.length; i++) {
+      hit = player.Collide(coins[i]);
+
+      if (hit) {
+        scoreCount++;
+        score.textContent = `Счёт: ${scoreCount}`;
+        coins.splice(i, 1); // Удалить монетку при столкновении
+        if (scoreCount === 10) {
+          player.dead = true;
+          Stop();
+          scorePageText.textContent = `Поздравляю, ты собрал 10 канистр. Ускоряемся и скорее ждём тебя в уличных гонках!`;
+          scorePage.classList.add('score-page_active');
+        }
+        break;
+      }
+    }
+
+    Draw();
+    if (!player.dead) {
+      animationId = requestAnimationFrame(Update);
+    }
+  }
+
+  function Draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clearing the canvas
+
+    for (let i = 0; i < roads.length; i++) {
+      ctx.drawImage(
+        roads[i].image, // Image
+        0, // First X on image
+        0, // First Y on image
+        roads[i].image.width, // End X on image
+        roads[i].image.height, // End Y on image
+        roads[i].x, // X on canvas
+        roads[i].y, // Y on canvas
+        canvas.width, // Width on canvas
+        canvas.height // Height on canvas
+      );
+    }
+
+    DrawCar(player);
+
+    for (let i = 0; i < objects.length; i++) {
+      DrawCar(objects[i]);
+    }
+
+    for (let i = 0; i < coins.length; i++) {
+      DrawCar(coins[i]);
+    }
+  }
+
+  function DrawCar(car) {
+    ctx.drawImage(
+      car.image,
+      0,
+      0,
+      car.image.width,
+      car.image.height,
+      car.x,
+      car.y,
+      car.image.width * scale,
+      car.image.height * scale
+    );
+  }
+
+  function KeyDown(e) {
+    switch (e.keyCode) {
+      case 37:
+        // Left
+        player.Move("x", "left");
+        break;
+
+      case 39:
+        // Right
+        player.Move("x", "right");
+        break;
+    }
+  }
+
+  function ButtonDown(side) {
+    switch (side) {
+      case "left":
+        player.Move("x", "left");
+        break;
+      case "right":
+        player.Move("x", "right");
+        break;
+    }
+  }
+
+  function Restart() {
+    // Сбросить счёт
+    scoreCount = 0;
+    score.textContent = 'Счёт: 0';
+
+    // Очистить массивы объектов
+    objects = [];
+    coins = [];
+
+    // Сбросить позицию игрока
+    player.x = canvas.width / 2 - carWidth;
+    player.y = canvas.height / 2;
+
+    // Сбросить флаги
+    player.dead = false;
+    player.paused = false;
+    speed = 6;
+
+    // Запустить игру заново
+    Start();
+  }
+
+  function Resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function setObstacleCount(newCount) {
+    obstacleCount = newCount;
+  }
+
+  pauseBtn.addEventListener('click', () => {
+    Stop();
+    pausePage.classList.add('pause-page_active');
+  });
+
+  pausePageContinue.addEventListener('click', () => {
+    pausePage.classList.remove('pause-page_active');
+    setTimeout(() => {
+      Start();
+    }, 200)
+  });
+
+  pausePageRestart.addEventListener('click', () => {
+    Restart();
+    pausePage.classList.remove('pause-page_active');
+  });
+
+  scoreButton.addEventListener('click', () => {
+    scorePage.classList.remove('score-page_active');
+    setTimeout(() => {
+      speed = 13;
+      player.dead = false;
+      Start();
+    }, 200)
+  });
+
+  restartButton.addEventListener('click', () => {
+    Restart();
+    restartPage.classList.remove('restart-page_active');
+  });
+  return [Stop, Restart];
+} 
+
+// ============ FLAPPY BIRD CODE ===============
+const startPage = document.querySelector('.start-page');
+let gameOverPage;
+function startBird() {
+  //board
+  let board;
+  let boardWidth = window.innerWidth;
+  let boardHeight = window.innerHeight;
+  let context;
+
+  //bird
+  let birdWidth = 34; //width/height ratio = 408/228 = 17/12
+  let birdHeight = 24;
+  let birdX = boardWidth / 8;
+  let birdY = boardHeight / 2;
+  let birdImg;
+
+  let bird = {
+    x: birdX,
+    y: birdY,
+    width: birdWidth,
+    height: birdHeight
+  }
+
+  //pipes
+  let pipeArray = [];
+  let pipeWidth = 64; //width/height ratio = 384/3072 = 1/8
+  let pipeHeight = 512;
+  let pipeX = boardWidth + 100;
+  let pipeY = 0;
+
+  let topPipeImg;
+  let bottomPipeImg;
+
+  //physics
+  let velocityX = -2; //pipes moving left speed
+  let velocityY = 0; //bird jump speed
+  let gravity = 0.2;
+
+  let gameOver = false;
+  let isPaused = false;
+  let score = 0;
+
+  let pauseKey = "Escape";
+  let resumeKey = "Escape"; // Можете изменить клавишу для продолжения, если хотите
+  let enterKey = "Enter";
+
+
+  let coinArray = []; // Массив для хранения монеток
+  let coinWidth = 34;
+  let coinHeight = 34;
+  let coinX = boardWidth + 100;
+  let coinY = 0;
+
+  let goldCoinImg;
+  let silverCoinImg;
+  let bronzeCoinImg;
+
+  let scoreCountArray;
+  let gameRestart;
+  let scoreFinalPage;
+
+  let coinTypes = ["gold", "silver", "bronze"]; // Три вида монеток
+  let collectedCoins = { "gold": 0, "silver": 0, "bronze": 0 }; // Счетчик собранных монеток
+
+  let gameStarted = false;
+
+  function resetGame() {
+    cancelAnimationFrame(animationId);  // Отмена анимации при сбросе игры
+    bird.y = birdY;
+    pipeArray = [];
+    coinArray = [];
+    score = 0;
+    collectedCoins = { "gold": 0, "silver": 0, "bronze": 0 };
+    gameStarted = false;
+  }
+  const startPageButton = startPage.querySelector('.start-page__button');
+  board = document.getElementById("board");
+  (function () {
+    gameOverPage = document.querySelector('.game-over');
+    scoreFinalPage = document.querySelector('.game-over__score');
+    scoreCountArray = document.querySelectorAll('.game-over__score-num');
+
+    gameRestart = document.querySelector('.game-over__restart');
+    function changeImagesOnStartPage() {
+      let coinImages = ['./assets/bird/images/gold_coin.png', './assets/bird/images/silver_coin.png', './assets/bird/images/bronze_coin.png'];
+      let currentImageIndex = 0;
+      let coinElement = document.querySelector('.start-page__coin');
+
+      const intervalIdImages = setInterval(() => {
+        currentImageIndex = (currentImageIndex + 1) % coinImages.length;
+        coinElement.src = coinImages[currentImageIndex];
+      }, 1200);
+
+      startPageButton.addEventListener('click', () => {
+        clearInterval(intervalIdImages);
+      })
+    }
+    changeImagesOnStartPage();
+
+    // Добавляем обработчик событий после того, как gameRestart будет найден
+    if (gameRestart) {
+      gameRestart.addEventListener('click', function () {
+        gameOverPage.classList.remove('game-over_active');
+        resetGame();  // Сброс игры
+        startGame();
+      });
+    }
+    Resize();
+    window.addEventListener("resize", Resize); // Change the canvas size with the window size
+    context = board.getContext("2d"); //used for drawing on the board
+
+    //load images
+    birdImg = new Image();
+    birdImg.src = "./assets/bird/images/flappybird.png";
+    birdImg.onload = function () {
+      context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+    }
+
+    topPipeImg = new Image();
+    topPipeImg.src = "./assets/bird/images/toppipe.png";
+
+    bottomPipeImg = new Image();
+    bottomPipeImg.src = "./assets/bird/images/bottompipe.png";
+
+
+    goldCoinImg = new Image();
+    goldCoinImg.src = "./assets/bird/images/gold_coin.png"; // Путь к изображению золотой монетки
+
+    silverCoinImg = new Image();
+    silverCoinImg.src = "./assets/bird/images/silver_coin.png"; // Путь к изображению серебрянной монетки
+
+    bronzeCoinImg = new Image();
+    bronzeCoinImg.src = "./assets/bird/images/bronze_coin.png"; // Путь к изображению бронзовой монетки
+    startPageButton.addEventListener('click', () => {
+      startPage.classList.remove('start-page_active');
+      requestAnimationFrame(update);
+      setInterval(placePipes, 1500); // Переименовано для унификации функции генерации объектов
+      document.addEventListener("keydown", handleKeyPress);
+    });
+  })();
+
+  // startPageButton.addEventListener('click', () => {
+  //   startPage.classList.remove('start-page_active');
+  //   requestAnimationFrame(update);
+  //   setInterval(placePipes, 1500); // Переименовано для унификации функции генерации объектов
+  //   document.addEventListener("keydown", handleKeyPress);
+  // });
+
+  function handleRestartClick() {
+    gameOverPage.classList.remove('game-over_active');
+    resetGame();  // Сброс игры
+    startGame();
+  }
+
+  function Resize() {
+    board.width = window.innerWidth;
+    board.height = window.innerHeight;
+    boardWidth = window.innerWidth;
+    boardHeight = window.innerHeight;
+  }
+
+  let animationId;
+
+  function update() {
+    console.log('bird update')
+    animationId = requestAnimationFrame(update);
+    if (gameOver || isPaused) {
+      return;
+    }
+    context.clearRect(0, 0, board.width, board.height);
+
+    //bird
+    velocityY += gravity;
+    bird.y = Math.max(bird.y + velocityY, 0);
+    context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+
+    if (bird.y > board.height) {
+      gameOver = true;
+    }
+
+    //pipes
+    for (let i = 0; i < pipeArray.length; i++) {
+      let pipe = pipeArray[i];
+      pipe.x += velocityX;
+      context.drawImage(pipe.img, pipe.x, pipe.y, pipe.width, pipe.height);
+
+      if (!pipe.passed && bird.x > pipe.x + pipe.width) {
+        score += 0.5;
+        pipe.passed = true;
+      }
+
+      if (detectCollision(bird, pipe)) {
+        gameOver = true;
+      }
+    }
+
+    for (let i = 0; i < coinArray.length; i++) {
+      let coin = coinArray[i];
+      coin.x += velocityX;
+
+      let coinImage;
+      switch (coin.type) {
+        case "gold":
+          coinImage = goldCoinImg;
+          break;
+        case "silver":
+          coinImage = silverCoinImg;
+          break;
+        case "bronze":
+          coinImage = bronzeCoinImg;
+          break;
+        default:
+          coinImage = goldCoinImg;
+      }
+
+      // Проверка коллизии с монеткой
+      if (!coin.collected && detectCollision(bird, coin)) {
+        coin.collected = true;
+        collectedCoins[coin.type]++;
+        coinArray.splice(i, 1); // Удаление собранной монетки из массива
+        i--; // Уменьшаем индекс, так как массив уменьшился
+      } else {
+        context.drawImage(coinImage, coin.x, coin.y, coin.width, coin.height);
+      }
+    }
+
+    coinArray = coinArray.filter((coin) => coin.x > -coin.width);
+
+    // Генерация дополнительных монеток
+    if (Math.random() < 0.015) {
+      placeCoins();
+    }
+
+    // Draw the number of collected coins
+    context.fillStyle = "white";
+    context.font = "40px Pixel";
+    context.fillText(`Счёт: ${collectedCoins.gold + collectedCoins.silver + collectedCoins.bronze}`, 5, 25);
+
+    //clear pipes
+    while (pipeArray.length > 0 && pipeArray[0].x < -pipeWidth) {
+      pipeArray.shift();
+    }
+
+    if (gameOver) {
+      scoreCountArray.forEach((elem, index) => {
+        if (index === 0) {
+          elem.textContent = `${collectedCoins["gold"]}`;
+        }
+        else if (index === 1) {
+          elem.textContent = `${collectedCoins["silver"]}`;
+        }
+        else if (index === 2) {
+          elem.textContent = `${collectedCoins["bronze"]}`;
+        }
+      });
+      scoreFinalPage.textContent = `${collectedCoins["gold"] + collectedCoins["silver"] + collectedCoins["bronze"]}`;
+      gameOverPage.classList.add('game-over_active');
+      // Сброс счета по монеткам при проигрыше
+      collectedCoins = { "gold": 0, "silver": 0, "bronze": 0 };
+    }
+  }
+
+  document.addEventListener("touchstart", handleTouchStart);
+
+  // Функция обработки касания
+  function handleTouchStart(e) {
+    // Проверяем, что игра не завершена
+    if (!gameOver) {
+      //jump
+      velocityY = -3.75;
+
+      //reset game
+      if (gameOver) {
+        bird.y = birdY;
+        pipeArray = [];
+        score = 0;
+        gameOver = false;
+      }
+    }
+  }
+
+
+  function placeCoins() {
+    if (gameOver || isPaused) {
+      return;
+    }
+
+    // Генерация случайного типа монетки
+    let randomCoinType = coinTypes[Math.floor(Math.random() * coinTypes.length)];
+
+    // Позиция для генерации монетки
+    let coinPosition = generateRandomCoinPosition();
+
+    let coin = {
+      type: randomCoinType,
+      x: coinPosition.x,
+      y: coinPosition.y,
+      width: coinWidth,
+      height: coinHeight,
+      collected: false
+    };
+
+    // Проверка, чтобы монетки не перекрывались с трубами
+    if (!isCoinOverlappingWithPipes(coin)) {
+      coinArray.push(coin);
+    }
+  }
+
+  function generateRandomCoinPosition() {
+    // Генерация случайной позиции для монетки справа от экрана
+    let minY = board.height / 4; // Минимальная координата, чтобы не генерировать монетки выше верхней трети экрана
+    let maxY = board.height * 3 / 4 - coinHeight; // Максимальная координата, чтобы не генерировать монетки ниже нижней трети экрана
+
+    let pipeGap = 180; // Минимальное расстояние между трубами
+
+    // Выбираем случайные трубы между которыми будет генерироваться монетка
+    let randomTopPipe = pipeArray[Math.floor(Math.random() * pipeArray.length)];
+    let randomBottomPipe = pipeArray.find(pipe => pipe.y > randomTopPipe.y + pipeGap);
+
+    if (!randomTopPipe || !randomBottomPipe) {
+      // Если трубы отсутствуют, возвращаем случайные координаты справа от экрана
+      return { x: board.width + coinWidth, y: Math.random() * (maxY - minY) + minY };
+    }
+
+    // Генерация координаты по x за пределами экрана, чтобы монетка появилась справа
+    let coinX = board.width + coinWidth;
+
+    // Генерация случайной координаты по y для монетки между трубами
+    let coinY = minY + Math.random() * (maxY - minY);
+
+    return { x: coinX, y: coinY };
+  }
+
+  function generateRandomCoinY() {
+    // Генерация случайной координаты по y для монетки
+    let minY = board.height / 4; // Минимальная координата, чтобы не генерировать монетки выше верхней трети экрана
+    let maxY = board.height * 3 / 4 - coinHeight; // Максимальная координата, чтобы не генерировать монетки ниже нижней трети экрана
+    return minY + Math.random() * (maxY - minY);
+  }
+
+  // Проверка, чтобы монетка не перекрывалась с трубами
+  function isCoinOverlappingWithPipes(coin) {
+    for (let i = 0; i < pipeArray.length; i++) {
+      let pipe = pipeArray[i];
+      if (
+        coin.x < pipe.x + pipe.width &&
+        coin.x + coin.width > pipe.x &&
+        coin.y < pipe.y + pipe.height &&
+        coin.y + coin.height > pipe.y
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function placePipes() {
+    if (gameOver || isPaused) {
+      return;
+    }
+
+    //(0-1) * pipeHeight/2.
+    // 0 -> -128 (pipeHeight/4)
+    // 1 -> -128 - 256 (pipeHeight/4 - pipeHeight/2) = -3/4 pipeHeight
+    let randomPipeY = pipeY - pipeHeight / 4 - Math.random() * (pipeHeight / 2);
+    let openingSpace = board.height / 4;
+    let topPipe = {
+      img: topPipeImg,
+      x: pipeX,
+      y: randomPipeY,
+      width: pipeWidth,
+      height: pipeHeight,
+      passed: false
+    }
+    // if (pipeArray.length >= 4) {
+    //     console.log((pipeArray[pipeArray.length - 2]).x);
+    //     console.log(topPipe.x)
+    // } 
+    if (pipeArray.length >= 4 && Math.abs(topPipe.x - pipeArray[pipeArray.length - 2].x) < 180) {
+      topPipe.x += 300;
+      pipeArray.push(topPipe);
+    }
+    else {
+      pipeArray.push(topPipe);
+    }
+
+    let bottomPipe = {
+      img: bottomPipeImg,
+      x: pipeX,
+      y: randomPipeY + pipeHeight + openingSpace,
+      width: pipeWidth,
+      height: pipeHeight,
+      passed: false
+    }
+    if (pipeArray.length >= 4 && Math.abs(bottomPipe.x - pipeArray[pipeArray.length - 2].x) < 180) {
+      bottomPipe.x += 300;
+      pipeArray.push(bottomPipe);
+    }
+    else {
+      pipeArray.push(bottomPipe);
+    }
+    placeCoins();
+  }
+
+  function moveBird(e) {
+    // Проверяем, что игра не завершена
+    if (!gameOver) {
+      // Проверяем, что событие произошло внутри окна
+      if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX") {
+        // Проверяем, что игра не завершена
+        if (!gameOver) {
+          // Прыгаем
+          velocityY = -3.75;
+
+          // Сброс игры
+          if (gameOver) {
+            bird.y = birdY;
+            pipeArray = [];
+            score = 0;
+            gameOver = false;
+          }
+        }
+      }
+    }
+  }
+
+  function detectCollision(a, b) {
+    return a.x < b.x + b.width &&   //a's top left corner doesn't reach b's top right corner
+      a.x + a.width > b.x &&   //a's top right corner passes b's top left corner
+      a.y < b.y + b.height &&  //a's top left corner doesn't reach b's bottom left corner
+      a.y + a.height > b.y;    //a's bottom left corner passes b's top left corner
+  }
+
+  function handleKeyPress(e) {
+    if (e.code === pauseKey) {
+      togglePause();
+    } else {
+      // Вызываем moveBird только если игра не на паузе и не завершена
+      moveBird(e);
+    }
+  }
+
+  document.addEventListener("keydown", handleKeyPress);
+
+  function togglePause() {
+    if (!gameOver) {
+      if (isPaused) {
+        // Если игра на паузе, продолжаем ее выполнение
+        isPaused = false;
+        requestAnimationFrame(update);
+      } else {
+        // Если игра не на паузе, ставим ее на паузу
+        isPaused = true;
+        cancelAnimationFrame(animationId);
+      }
+    }
+  }
+
+  function startGame() {
+    if (!gameStarted) {
+      gameStarted = true;
+      // Инициализируем начальные значения переменных и начинаем игру
+      gameOver = false;
+      bird.y = birdY;
+      velocityY = -3.75;
+      pipeArray = [];
+      coinArray = [];
+      score = 0;
+      collectedCoins = { "gold": 0, "silver": 0, "bronze": 0 };
+      isPaused = false;
+      animationId = requestAnimationFrame(update);
+    }
+  }
+return [resetGame, handleRestartClick, startGame];
 }

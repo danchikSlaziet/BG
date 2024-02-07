@@ -6,17 +6,12 @@
   <link rel="stylesheet" href="./normalize.css">
   <link rel="stylesheet" href="./vendor/swiper/swiper.css">
   <link rel="stylesheet" href="./main.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <title>Brand Games</title>
 </head>
 <body>
   <div class="brand">
-    <!-- <div class="brand-secret">
-      <img class="brand-secret__logo" src="./assets/brand/images/brand-games-logo.svg" alt="brand games logo логотип брэнд геймс">
-      <p class="brand-secret__text">
-        Ты нашёл секретную страничку, только тссссс...<br>
-        Никому не рассказывай!
-      </p>
-    </div> -->
+
     <div class="brand-first brand-first_active">
       <div class="brand-first__circle-border">
         <img class="brand-first__logo" src="./assets/brand/images/brand-games-logo.svg" alt="brand games logo логотип брэнд геймс">
@@ -76,25 +71,25 @@
             </div>
             <p class="brand-first__game-play">Играть</p>
           </div>
-          <div class="brand-first__game-full">
+          <div class="brand-first__game-full brand-first__game-full_later">
             <div class="brand-first__game">
               <!-- <img class="brand-first__game-new" src="./assets/brand/images/game-new.svg" alt=""> -->
               <img class="brand-first__game-img" src="./assets/brand/images/game-img.png" alt="">
               <h2 class="brand-first__game-title">
-                Название игры
+                Сапёр
               </h2>
               <p class="brand-first__game-subtitle">
                 Классический раннер со сбором предметов
               </p>
             </div>
-            <p class="brand-first__game-play">Играть</p>
+            <p class="brand-first__game-play">Скоро</p>
           </div>
           <div class="brand-first__game-full brand-first__game-full_later">
             <div class="brand-first__game">
               <!-- <img class="brand-first__game-new" src="./assets/brand/images/game-new.svg" alt=""> -->
               <img class="brand-first__game-img" src="./assets/brand/images/game-img.png" alt="">
               <h2 class="brand-first__game-title">
-                Название игры
+                Три в ряд
               </h2>
               <p class="brand-first__game-subtitle">
                 Классический раннер со сбором предметов
@@ -157,55 +152,57 @@
             </div>
           </div>
         </div>
-        <div class="swiper achieve-swiper">
-          <div class="swiper-wrapper">
-            <!-- Slides -->
-            <div class="swiper-slide">
-              <div class="swiper-slide__achieve">
-                <img class="swiper-slide__achieve-img" src="./assets/brand/images/achieve-1.svg" alt="">
-                <p class="swiper-slide__achieve-text">
-                  Система<br>наград
-                </p>
+        <div class="brand-second__achieve-swiper">
+          <div class="swiper achieve-swiper">
+            <div class="swiper-wrapper">
+              <!-- Slides -->
+              <div class="swiper-slide">
+                <div class="swiper-slide__achieve">
+                  <img class="swiper-slide__achieve-img" src="./assets/brand/images/achieve-1.svg" alt="">
+                  <p class="swiper-slide__achieve-text">
+                    Система<br>наград
+                  </p>
+                </div>
               </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="swiper-slide__achieve">
-                <img class="swiper-slide__achieve-img" src="./assets/brand/images/achieve-2.svg" alt="">
-                <p class="swiper-slide__achieve-text">
-                  Рейтинговая<br>таблица
-                </p>
+              <div class="swiper-slide">
+                <div class="swiper-slide__achieve">
+                  <img class="swiper-slide__achieve-img" src="./assets/brand/images/achieve-2.svg" alt="">
+                  <p class="swiper-slide__achieve-text">
+                    Рейтинговая<br>таблица
+                  </p>
+                </div>
               </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="swiper-slide__achieve">
-                <img class="swiper-slide__achieve-img" src="./assets/brand/images/achieve-3.svg" alt="">
-                <p class="swiper-slide__achieve-text">
-                  Брендинг<br>под компанию
-                </p>
+              <div class="swiper-slide">
+                <div class="swiper-slide__achieve">
+                  <img class="swiper-slide__achieve-img" src="./assets/brand/images/achieve-3.svg" alt="">
+                  <p class="swiper-slide__achieve-text">
+                    Брендинг<br>под компанию
+                  </p>
+                </div>
               </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="swiper-slide__achieve">
-                <img class="swiper-slide__achieve-img" src="./assets/brand/images/achieve-1.svg" alt="">
-                <p class="swiper-slide__achieve-text">
-                  Система<br>наград
-                </p>
+              <div class="swiper-slide">
+                <div class="swiper-slide__achieve">
+                  <img class="swiper-slide__achieve-img" src="./assets/brand/images/achieve-1.svg" alt="">
+                  <p class="swiper-slide__achieve-text">
+                    Система<br>наград
+                  </p>
+                </div>
               </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="swiper-slide__achieve">
-                <img class="swiper-slide__achieve-img" src="./assets/brand/images/achieve-2.svg" alt="">
-                <p class="swiper-slide__achieve-text">
-                  Рейтинговая<br>таблица
-                </p>
+              <div class="swiper-slide">
+                <div class="swiper-slide__achieve">
+                  <img class="swiper-slide__achieve-img" src="./assets/brand/images/achieve-2.svg" alt="">
+                  <p class="swiper-slide__achieve-text">
+                    Рейтинговая<br>таблица
+                  </p>
+                </div>
               </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="swiper-slide__achieve">
-                <img class="swiper-slide__achieve-img" src="./assets/brand/images/achieve-3.svg" alt="">
-                <p class="swiper-slide__achieve-text">
-                  Брендинг<br>под компанию
-                </p>
+              <div class="swiper-slide">
+                <div class="swiper-slide__achieve">
+                  <img class="swiper-slide__achieve-img" src="./assets/brand/images/achieve-3.svg" alt="">
+                  <p class="swiper-slide__achieve-text">
+                    Брендинг<br>под компанию
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -277,7 +274,7 @@
             <span id="score">00</span>
           </div>
           <div class="info-pc">
-            <p class="info-pc__text">Чтобы начать игру, нажмите одну из клавишей  ←&nbsp;&nbsp;&nbsp;→&nbsp;&nbsp;&nbsp;↑&nbsp;&nbsp;&nbsp;↓.</p>
+            <p class="info-pc__text">Чтобы начать игру, нажмите одну из клавишей&nbsp;&nbsp;&nbsp;W,&nbsp;&nbsp;&nbsp;A,&nbsp;&nbsp;&nbsp;S,&nbsp;&nbsp;&nbsp;D.</p>
           </div>
           <div id="controls">
             <div class="top-control">
@@ -295,6 +292,7 @@
       </div>
     </div>
     <div class="puzzle">
+      <img class="main-menu puzzle__back" src="./assets/brand/images/back-arrow-white.svg" alt="">
       <div class="first-page first-page_active">
         <div class="first-page__content">
           <img class="first-page__img" src="./assets/puzzle/images/puzzle.png" alt="">
@@ -365,6 +363,107 @@
         <canvas id="canvas-puzzle"></canvas>
         <div class="main-page__next">Далее</div>
       </div>
+    </div>
+    <div class="runner">
+      <img class="main-menu runner__back" src="./assets/brand/images/back-arrow.svg" alt="">
+      <div class="wrapper">
+        <img class="pause" src="./assets/runner/images/pause.png" alt="pause">
+        <p class="score">Счёт: 0</p>
+        <div class="pause-page">
+          <div class="pause-page__content">
+            <button type="button" class="pause-page__btn pause-page__btn_continue">Продолжить</button>
+            <button type="button" class="pause-page__btn pause-page__btn_restart">Заново</button>
+          </div>
+        </div>
+        <div class="restart-page">
+          <div class="restart-page__content">
+            <button type="button" class="restart-page__btn">Заново</button>
+          </div>
+        </div>
+        <div class="score-page">
+          <div class="score-page__content">
+            <p class="score-page__text">
+  
+            </p>
+            <button type="button" class="score-page__btn">Продолжить</button>
+          </div>
+        </div>
+        <img class="arrow-btn arrow-btn_left" src="./assets/runner/images/arrow.svg" alt="">
+        <img class="arrow-btn arrow-btn_right" src="./assets/runner/images/arrow.svg" alt="">
+        <canvas width="0" height="0" class="canvas-runner" id="canvas-runner">Your browser does not support JavaScript and HTML5!</canvas>
+      </div>
+    </div>
+    <div class="bird">
+      <div class="start-page start-page_active">
+        <div class="start-page__content">
+          <p class="start-page__title">
+            Полёт птички!<br>Игра для тех, кто любит скорость
+          </p>
+          <p class="start-page__subtitle">
+            Сейчас ваш смартфон превратится в птичий симулятор. Тапайте по экрану, облетайте препятствия и постарайтесь
+            набрать как можно больше очков.
+          </p>
+          <div class="start-page__images">
+            <img class="start-page__bird" src="./assets/bird/images/flappy.png" alt="">
+            <img class="start-page__coin" src="./assets/bird/images/silver_coin.png" alt="">
+          </div>
+          <button class="start-page__button">
+            <span class="start-page__button-text">Полетели!</span>
+          </button>
+        </div>
+      </div>
+      <div class="game-over">
+        <div class="game-over__back">
+          <img class="main-menu bird__back" src="./assets/brand/images/back-arrow.svg" alt="">
+          <p class="game-over__back-text">Вернуться</p>
+        </div>
+        <div class="game-over__content">
+          <div class="game-over__text-block">
+            <div class="game-over__score-count">
+              <span class="game-over__score">20</span>
+            </div>
+            <p class="game-over__text">Я - лучшая птичка на планете!</p>
+            <p class="game-over__subtext">
+              Соберу все пиксельные артефакты, пока играет моя любимая песня.
+            </p>
+          </div>
+          <div class="game-over__other-bg">
+            <div class="game-over__about-score">
+              <p class="game-over__about-score-text">
+                Вы собрали:
+              </p>
+              <div class="game-over__items-container">
+                <div class="game-over__about-score-item">
+                  <img src="./assets/bird/images/gold_coin.png" alt="">
+                  <img src="./assets/bird/images/close.png" alt="">
+                  <p class="game-over__score-num">3</p>
+                </div>
+                <div class="game-over__about-score-item">
+                  <img src="./assets/bird/images/silver_coin.png" alt="">
+                  <img src="./assets/bird/images/close.png" alt="">
+                  <p class="game-over__score-num">3</p>
+                </div>
+                <div class="game-over__about-score-item">
+                  <img src="./assets/bird/images/bronze_coin.png" alt="">
+                  <img src="./assets/bird/images/close.png" alt="">
+                  <p class="game-over__score-num">3</p>
+                </div>
+              </div>
+            </div>
+            <div class="game-over__brand-info">
+              Некий информационный или продающий текст. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos
+              adipisci perferendis voluptatem nisi deleniti dolorum cupiditate temporibus excepturi, nam suscipit sequi,
+              quia placeat neque. Quas nesciunt earum vero nulla quisquam.
+            </div>
+            <button class="game-over__restart" type="button">
+              <span class="game-over__restart-text">
+                Начать заново
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <canvas id="board"></canvas>
     </div>
   </div>
   <script src="./vendor/snake/jquery.min.js"></script>
