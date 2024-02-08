@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <script src="./vendor/tower/three.js"></script>
   <link rel="stylesheet" href="./normalize.css">
   <link rel="stylesheet" href="./vendor/swiper/swiper.css">
   <link rel="stylesheet" href="./main.css">
@@ -11,7 +12,6 @@
 </head>
 <body>
   <div class="brand">
-
     <div class="brand-first brand-first_active">
       <div class="brand-first__circle-border">
         <img class="brand-first__logo" src="./assets/brand/images/brand-games-logo.svg" alt="brand games logo логотип брэнд геймс">
@@ -64,6 +64,19 @@
               <img class="brand-first__game-img" src="./assets/brand/images/game-img.png" alt="">
               <h2 class="brand-first__game-title">
                 Птичка
+              </h2>
+              <p class="brand-first__game-subtitle">
+                Классический раннер со сбором предметов
+              </p>
+            </div>
+            <p class="brand-first__game-play">Играть</p>
+          </div>
+          <div class="brand-first__game-full">
+            <div class="brand-first__game">
+              <!-- <img class="brand-first__game-new" src="./assets/brand/images/game-new.svg" alt=""> -->
+              <img class="brand-first__game-img" src="./assets/brand/images/game-img.png" alt="">
+              <h2 class="brand-first__game-title">
+                Башня
               </h2>
               <p class="brand-first__game-subtitle">
                 Классический раннер со сбором предметов
@@ -465,7 +478,18 @@
       </div>
       <canvas id="board"></canvas>
     </div>
+    <div class="tower">
+      <div class="results">
+        <div class="content">
+          <p class="content__text">Ты промахнулся</p>
+          <p class="content__restart">Заново</p>
+          <p class="content__exit">Выйти из игры</p>
+        </div>
+      </div>
+      <div id="tower-score">0</div>
+    </div>
   </div>
+  <script src="./vendor/tower/cannon.js"></script>
   <script src="./vendor/snake/jquery.min.js"></script>
   <script src="./vendor/snake/mobile-detect.min.js"></script>
   <script src="./vendor/swiper/swiper.js"></script>
