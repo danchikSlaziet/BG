@@ -6,6 +6,8 @@ let isRunnerStarted = false;
 let stopRunner;
 let restartRunner;
 
+let isTowerStarted = false;
+
 let isBirdStarted = false;
 let isBirdGameOver = false;
 let resetBirdGame;
@@ -32,14 +34,14 @@ function initSwipers() {
   });
 }
 document.addEventListener('DOMContentLoaded', () => {
-  // let app = window.Telegram.WebApp;
-  // let query = app.initData;
-  // let user_data_str = parseQuery(query).user;
-  // let user_data = JSON.parse(user_data_str);
-  // userData = user_data;
-  // app.expand();
-  // app.ready();
-  // userChatId = user_data["id"];
+  let app = window.Telegram.WebApp;
+  let query = app.initData;
+  let user_data_str = parseQuery(query).user;
+  let user_data = JSON.parse(user_data_str);
+  userData = user_data;
+  app.expand();
+  app.ready();
+  userChatId = user_data["id"];
   initSwipers();
 });
 const firstBrandPage = document.querySelector('.brand-first');
@@ -132,6 +134,7 @@ secondBrandPlay.addEventListener('click', () => {
     secondBrandPage.classList.remove('brand-second_active');
     towerPage.classList.add('tower_active');
     startTower();
+    isTowerStarted = true;
   }
 });
 
@@ -2270,8 +2273,6 @@ const instructionsElement = document.getElementById("instructions");
 const resultsElement = document.querySelector(".results");
 const restartElement = document.querySelector('.content__restart');
 
-init();
-
 // Determines how precise the game is on autopilot
 function setRobotPrecision() {
   robotPrecision = Math.random() * 1 - 0.5;
@@ -2286,24 +2287,26 @@ function init() {
   setRobotPrecision();
 
   // Initialize CannonJS
-  world = new CANNON.World();
+    world = new CANNON.World();
+  
   world.gravity.set(0, -10, 0); // Gravity pulls things down
-  world.broadphase = new CANNON.NaiveBroadphase();
+
+    world.broadphase = new CANNON.NaiveBroadphase();
+  
   world.solver.iterations = 40;
 
   // Initialize ThreeJs
   const aspect = window.innerWidth / window.innerHeight;
   const width = 10;
   const height = width / aspect;
-
-  camera = new THREE.OrthographicCamera(
-    width / -2, // left
-    width / 2, // right
-    height / 2, // top
-    height / -2, // bottom
-    0, // near plane
-    100 // far plane
-  );
+    camera = new THREE.OrthographicCamera(
+      width / -2, // left
+      width / 2, // right
+      height / 2, // top
+      height / -2, // bottom
+      0, // near plane
+      100 // far plane
+    );
 
   /*
   // If you want to use perspective camera instead, uncomment these lines
@@ -2317,9 +2320,7 @@ function init() {
 
   camera.position.set(4, 4, 4);
   camera.lookAt(0, 0, 0);
-
-  scene = new THREE.Scene();
-
+    scene = new THREE.Scene();
   // Foundation
   addLayer(0, 0, originalBoxSize, originalBoxSize);
 
@@ -2338,8 +2339,12 @@ function init() {
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animation);
-  document.body.appendChild(renderer.domElement);
+  if (!isTowerStarted) {
+    towerPage.appendChild(renderer.domElement);
+  }
 }
+
+init();
 
 function stopLoop() {
   renderer.setAnimationLoop(null);
