@@ -2142,3 +2142,81 @@ body,html {
   text-transform: uppercase;
 }
 
+/*  ============== CROSSY ROAD ============ */
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
+.road {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 2em;
+  color: white;
+  cursor: pointer;
+  margin: 0;
+  pointer-events: none;
+  font-weight: 400;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: visibility .25s, transform .25s linear, opacity .4s ease-in-out;
+}
+.road_active {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: all;
+}
+.road button {
+  outline: none;
+  cursor: pointer;
+  border: none;
+  box-shadow: 3px 5px 0px 0px rgba(0,0,0,0.75);
+}
+.road #counter {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+.road #end {
+  position: absolute;
+  min-width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+}
+.road #end button {
+  background-color: red;
+  padding: 20px 50px 20px 50px;
+  font-family: inherit;
+  font-size: inherit;
+}
+.road #controlls {
+  position: absolute;
+  min-width: 100%;
+  min-height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.road #controlls div {
+  display: grid;
+  grid-template-columns: 50px 50px 50px;
+  grid-template-rows: auto auto;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  margin-bottom: 20px;
+}
+.road #controlls button {
+  width: 100%;
+  background-color: white;
+  border: 1px solid lightgray;
+}
+.road #controlls button:first-of-type {
+  grid-column: 1/-1;
+}
