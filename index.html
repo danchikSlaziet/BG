@@ -110,7 +110,7 @@
             </div>
             <p class="brand-first__game-play">Играть</p>
           </div>
-          <div class="brand-first__game-full brand-first__game-full_later">
+          <div class="brand-first__game-full">
             <div class="brand-first__game">
               <!-- <img class="brand-first__game-new" src="./assets/brand/images/game-new.svg" alt=""> -->
               <img class="brand-first__game-img" src="./assets/brand/images/game-img.png" alt="">
@@ -121,7 +121,7 @@
                 Классический раннер со сбором предметов
               </p>
             </div>
-            <p class="brand-first__game-play">Скоро</p>
+            <p class="brand-first__game-play">Играть</p>
           </div>
           <div class="brand-first__game-full brand-first__game-full_later">
             <div class="brand-first__game">
@@ -563,6 +563,18 @@
       <div id="end">
         <button id="retry">Retry</button>
         <button id="exit">Exit</button>
+      </div>
+    </div>
+    <div class="sapper" oncontextmenu="return false;">
+      <div id="game-container">
+        <div class="info">Time Elapsed: <span id="timer">0</span> seconds</div>
+        <div class="info">Remaining Mines: <span id="mines-remaining">10</span></div>
+        <table id="grid">
+        </table>
+        <div class="buttons">
+          <button class="sapper-restart">Restart Game</button>
+          <button class="sapper-exit">Exit</button>
+        </div>
       </div>
     </div>
   </div>

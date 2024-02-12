@@ -20,6 +20,8 @@ let roadExitClicked = false;
 let startRoadGame;
 let stopRoadGame;
 
+let sapperInterval;
+
 let BrandSwiper;
 let AchieveSwiper;
 function parseQuery(queryString) {
@@ -40,14 +42,14 @@ function initSwipers() {
   });
 }
 document.addEventListener('DOMContentLoaded', () => {
-  let app = window.Telegram.WebApp;
-  let query = app.initData;
-  let user_data_str = parseQuery(query).user;
-  let user_data = JSON.parse(user_data_str);
-  userData = user_data;
-  app.expand();
-  app.ready();
-  userChatId = user_data["id"];
+  // let app = window.Telegram.WebApp;
+  // let query = app.initData;
+  // let user_data_str = parseQuery(query).user;
+  // let user_data = JSON.parse(user_data_str);
+  // userData = user_data;
+  // app.expand();
+  // app.ready();
+  // userChatId = user_data["id"];
   initSwipers();
 });
 const firstBrandPage = document.querySelector('.brand-first');
@@ -64,10 +66,12 @@ const towerPage = document.querySelector('.tower');
 const towerExit = towerPage.querySelector('.content__exit');
 const ninjaPage = document.querySelector('.ninja');
 const roadPage = document.querySelector('.road');
+const sapperPage = document.querySelector('.sapper');
+const sapperExit = sapperPage.querySelector('.sapper-exit');
 
 gamesArray.forEach((elem, index) => {
   elem.addEventListener('click', () => {
-    if (index !== gamesArray.length - 1 && index !== gamesArray.length - 2) {
+    if (index !== gamesArray.length - 1 && index !== gamesArray.length - 1) {
       secondBrandTitle.textContent = elem.querySelector('.brand-first__game-title').textContent;
       firstBrandPage.classList.remove('brand-first_active');
       secondBrandPage.classList.add('brand-second_active');
@@ -160,6 +164,11 @@ secondBrandPlay.addEventListener('click', () => {
       startRoadGame();
     }
   }
+  if (secondBrandTitle.textContent.trim() === 'Сапёр') {
+    secondBrandPage.classList.remove('brand-second_active');
+    sapperPage.classList.add('sapper_active');
+    sapperInterval = startSapper();
+  }
 });
 
 document.getElementById('ninja-exit').addEventListener('click', () => {
@@ -193,6 +202,13 @@ birdPage.querySelector('.game-over__back').addEventListener('click', () => {
   birdPage.classList.remove('bird_active');
   secondBrandPage.classList.add('brand-second_active');
   resetBirdGame();
+  initSwipers();
+});
+
+sapperExit.addEventListener('click', () => {
+  secondBrandPage.classList.add('brand-second_active');
+  sapperPage.classList.remove('sapper_active');
+  sapperInterval();
   initSwipers();
 });
 
@@ -3827,4 +3843,219 @@ function startRoad() {
   return [startGame, stopGame];
 }
 
+// ================= SAPPER GAME CODE ===============
 
+function startSapper() {
+  var grid = document.getElementById("grid");
+  var startTime = null;
+  var timerInterval = null;
+  var minesRemaining = 40;
+  var gameOver = false;
+  var clockAudioPlaying = false;
+
+  function startTimer() {
+    startTime = new Date();
+    timerInterval = setInterval(updateTimer, 1000);
+  }
+
+  function updateTimer() {
+    console.log('timer is active')
+    var currentTime = new Date();
+    var elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
+    document.getElementById("timer").textContent = elapsedSeconds;
+
+    var flaggedCells = document.querySelectorAll(".flagged").length;
+    var remaining = 10 - flaggedCells;
+
+    if (elapsedSeconds >= 60 && remaining > 0) {
+      clearInterval(timerInterval);
+      revealMines();
+      gameOver = true;
+    }
+  }
+
+  function endGame() {
+    clearInterval(timerInterval);
+    revealMines();
+    gameOver = true;
+  }
+
+  function updateMinesRemaining() {
+    var flaggedCells = document.querySelectorAll(".flagged").length;
+    var remaining = 10 - flaggedCells;
+    document.getElementById("mines-remaining").textContent = remaining;
+  }
+
+  function addMines() {
+    var minePositions = [];
+    while (minePositions.length < 10) {
+      var row = Math.floor(Math.random() * 10);
+      var col = Math.floor(Math.random() * 10);
+      var position = row * 10 + col;
+      if (!minePositions.includes(position)) {
+        minePositions.push(position);
+        var cell = grid.rows[row].cells[col];
+        cell.setAttribute("data-mine", "true");
+      }
+    }
+  }
+
+  function revealMines() {
+    for (var i = 0; i < 10; i++) {
+      for (var j = 0; j < 10; j++) {
+        var cell = grid.rows[i].cells[j];
+        if (cell.getAttribute("data-mine") == "true") {
+          cell.classList.add("mine");
+          cell.innerHTML = "💣";
+        }
+      }
+    }
+  }
+
+  var grid = document.getElementById("grid");
+  var startTime = null;
+  var timerInterval = null;
+  var minesRemaining = 40;
+  var gameOver = false;
+
+
+  function playClockAudio() {
+
+
+  }
+
+  function stopClockAudio() {
+
+  }
+
+  function checkLevelCompletion() {
+    var allTilesRevealed = true;
+    var allBombsFlagged = true;
+
+    for (var i = 0; i < 10; i++) {
+      for (var j = 0; j < 10; j++) {
+        var cell = grid.rows[i].cells[j];
+        var isMine = cell.getAttribute("data-mine") === "true";
+        var isFlagged = cell.classList.contains("flagged");
+        var isRevealed = cell.classList.contains("revealed");
+
+        if (!isRevealed && !isFlagged && !isMine) {
+          allTilesRevealed = false;
+        }
+
+        if (!isRevealed && !isFlagged && isMine) {
+          allBombsFlagged = false;
+        }
+      }
+    }
+
+    if (allTilesRevealed) {
+      clearInterval(timerInterval);
+      revealMines();
+    }
+
+    if (allBombsFlagged) {
+      clearInterval(timerInterval);
+    }
+  }
+
+  function generateGrid() {
+    grid.innerHTML = "";
+    startTime = null;
+    clearInterval(timerInterval);
+    minesRemaining = 40;
+    document.getElementById("timer").textContent = 0;
+    document.getElementById("mines-remaining").textContent = minesRemaining;
+
+    for (var i = 0; i < 10; i++) {
+      var row = grid.insertRow(i);
+      for (var j = 0; j < 10; j++) {
+        var cell = row.insertCell(j);
+        cell.setAttribute("data-state", "hidden");
+        cell.addEventListener("mousedown", function (event) {
+          if (!startTime) {
+            startTimer();
+          }
+
+          if (event.button === 0) {
+            clickCell(this, event);
+          } else if (event.button === 2) {
+            toggleFlag(this);
+          }
+
+          event.preventDefault();
+        });
+
+        var mine = document.createAttribute("data-mine");
+        mine.value = "false";
+        cell.setAttributeNode(mine);
+      }
+    }
+    addMines();
+  }
+
+  function toggleFlag(cell) {
+    if (!cell.classList.contains("revealed")) {
+      if (cell.getAttribute("data-state") === "hidden" && minesRemaining > 0) {
+        cell.setAttribute("data-state", "flagged");
+        cell.innerHTML = "🚩";
+
+        if (cell.getAttribute("data-mine") === "true") {
+          minesRemaining--;
+          document.getElementById("mines-remaining").textContent = minesRemaining;
+        }
+      } else if (cell.getAttribute("data-state") === "flagged") {
+        cell.setAttribute("data-state", "hidden");
+        cell.innerHTML = "";
+
+        if (cell.getAttribute("data-mine") === "true") {
+          minesRemaining++;
+          document.getElementById("mines-remaining").textContent = minesRemaining;
+        }
+      }
+      checkLevelCompletion();
+    }
+  }
+
+  function clickCell(cell, event) {
+    if (!cell.classList.contains("revealed")) {
+      if (cell.getAttribute("data-mine") == "true") {
+        revealMines();
+        clearInterval(timerInterval);
+        gameOver = true;
+      } else {
+        cell.classList.add("revealed");
+        var mineCount = 0;
+        var cellRow = cell.parentNode.rowIndex;
+        var cellCol = cell.cellIndex;
+
+        for (var i = Math.max(cellRow - 1, 0); i <= Math.min(cellRow + 1, 9); i++) {
+          for (var j = Math.max(cellCol - 1, 0); j <= Math.min(cellCol + 1, 9); j++) {
+            if (grid.rows[i].cells[j].getAttribute("data-mine") == "true") {
+              mineCount++;
+            }
+          }
+        }
+
+        cell.innerHTML = mineCount;
+
+        if (mineCount == 0) {
+          for (var i = Math.max(cellRow - 1, 0); i <= Math.min(cellRow + 1, 9); i++) {
+            for (var j = Math.max(cellCol - 1, 0); j <= Math.min(cellCol + 1, 9); j++) {
+              var adjacentCell = grid.rows[i].cells[j];
+              if (!adjacentCell.classList.contains("revealed") && !adjacentCell.classList.contains("flagged")) {
+                clickCell(adjacentCell, event);
+              }
+            }
+          }
+        }
+        checkLevelCompletion();
+      }
+    }
+  }
+  generateGrid();
+  document.querySelector('.sapper-restart').addEventListener('click', () => {
+    generateGrid();
+  });
+  return endGame;
+}

@@ -2145,7 +2145,7 @@ body,html {
 /*  ============== CROSSY ROAD ============ */
 @import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
 .road {
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Press Start 2P', Arial, Helvetica, sans-serif;
   font-size: 2em;
   color: white;
   cursor: pointer;
@@ -2219,4 +2219,222 @@ body,html {
 }
 .road #controlls button:first-of-type {
   grid-column: 1/-1;
+}
+
+/* ======================= SAPPER GAME CODE ============ */
+.sapper {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  background: #0A0A0A;
+  pointer-events: none;
+  font-weight: 400;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: visibility .25s, transform .25s linear, opacity .4s ease-in-out;
+}
+.sapper_active {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: all;
+}
+
+.sapper svg {
+  font-family: 'Monoton', cursive;
+  width: 100%;
+  height: 100%;
+  margin-top: 2%;
+}
+
+.sapper svg text {
+  animation: stroke 5s infinite alternate;
+  stroke-width: 2;
+  stroke: #FFD700; /* Updated neon color to gold */
+  font-size: 100px;
+  fill: transparent; /* Make text transparent */
+  transition: transform 0.3s ease-in-out; /* Add scaling transition */
+}
+
+.sapper svg text:hover {
+transform: scale(1.2); /* Scale up when hovered */
+}
+@keyframes stroke {
+  0% {
+      stroke: #FFD700; /* Updated neon color to gold */
+      stroke-dashoffset: 25%;
+      stroke-dasharray: 0 50%;
+      stroke-width: 2;
+  }
+  70% {
+      stroke: #FFD700; /* Updated neon color to gold */
+  }
+  80% {
+      stroke: #FFD700; /* Updated neon color to gold */
+      stroke-width: 3;
+  }
+  100% {
+      stroke: #00CC00; /* Retro green color */
+      stroke-dashoffset: -25%;
+      stroke-dasharray: 50% 0;
+      stroke-width: 2; /* Adjust the stroke width for the green color */
+  }
+}
+
+.sapper::selection {
+  color: #fff;
+  background: #FFD700; /* Updated selection color to gold */
+}
+
+.sapper #game-container {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+min-height: 90vh;
+position: relative;
+}
+
+.sapper #grid {
+margin: 20px auto;
+border: 2px solid #00ffcc;
+background-color: #111;
+display: inline-block;
+padding: 10px;
+border-radius: 10px;
+animation: neon-glow 5s infinite alternate;
+}
+
+@keyframes neon-glow {
+0% {
+box-shadow: 0px 0px 30px rgba(0, 255, 204, 0.5);
+}
+100% {
+box-shadow: 0px 0px 50px rgba(0, 255, 204, 0.9);
+}
+}
+
+.sapper #grid tr {
+height: 28px;
+}
+
+.sapper #grid td {
+width: 30px;
+height: 22px;
+text-align: center;
+vertical-align: middle;
+border: 1px solid #00ffcc;
+background-color: #222;
+cursor: pointer;
+transition: background-color 0.3s ease;
+font-size: 16px;
+font-weight: bold;
+position: relative;
+color: #00ffcc;
+}
+
+.sapper #grid td.flagged::before {
+content: "🚩";
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+font-size: 20px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.sapper #grid td.mine {
+background-color: #FF0000;
+color: #FFF;
+}
+
+.sapper #grid td.revealed {
+background-color: #444;
+cursor: default;
+}
+.sapper button {
+margin: 20px;
+padding: 12px 20px;
+background-color: #FFD700;
+color: #333;
+border: none;
+border-radius: 5px;
+font-size: 16px;
+cursor: pointer;
+transition: background-color 0.3s ease;
+}
+
+.sapper button:hover {
+background-color: #FFA500;
+}
+
+.sapper .info {
+font-size: 18px;
+margin-top: 20px;
+margin-bottom: 20px;
+color: #FFD700;
+}
+
+.sapper .info span {
+color: #FFA500;
+}
+
+.sapper:before {
+content: "";
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: linear-gradient(to bottom, #111, #222);
+z-index: -1;
+}
+
+.sapper button:hover {
+animation: pulse 0.5s infinite;
+}
+
+@keyframes pulse {
+0% {
+transform: scale(1);
+}
+50% {
+transform: scale(1.05);
+}
+100% {
+transform: scale(1);
+}
+}
+
+.sapper #grid td:not(.flagged):not(.revealed):hover {
+box-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+}
+
+.sapper #grid td.revealed {
+background-color: #444;
+cursor: default;
+}
+
+.sapper #grid td.mine {
+background-color: #FF0000;
+color: #FFF;
+}
+
+.sapper #grid td.flagged {
+background-color: #444;
+cursor: default;
+}
+
+.sapper #grid td:hover {
+background-color: #555;
 }
