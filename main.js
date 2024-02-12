@@ -3821,6 +3821,7 @@ function startRoad() {
   document.getElementById('exit').addEventListener('click', () => {
     roadExitClicked = true;
     stopGame();
+    initSwipers();
     roadPage.classList.remove('road_active');
     secondBrandPage.classList.add('brand-second_active');
   })
