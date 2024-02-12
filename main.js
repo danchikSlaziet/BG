@@ -3322,7 +3322,7 @@ function startRoad() {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setSize( window.innerWidth, window.innerHeight );
-  document.body.appendChild( renderer.domElement );
+  roadPage.appendChild( renderer.domElement );
 
   function Texture(width, height, rects) {
     const canvas = document.createElement( "canvas" );
@@ -3696,7 +3696,6 @@ function startRoad() {
     if (isGameStopped) {
       return;
     }
-    console.log('crossy running')
     reqID = requestAnimationFrame( animate );
 
     if(!previousTimestamp) previousTimestamp = timestamp;
