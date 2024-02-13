@@ -22,6 +22,8 @@ let stopRoadGame;
 
 let sapperInterval;
 
+let matchExitClicked = false;
+
 let BrandSwiper;
 let AchieveSwiper;
 function parseQuery(queryString) {
@@ -42,14 +44,14 @@ function initSwipers() {
   });
 }
 document.addEventListener('DOMContentLoaded', () => {
-  let app = window.Telegram.WebApp;
-  let query = app.initData;
-  let user_data_str = parseQuery(query).user;
-  let user_data = JSON.parse(user_data_str);
-  userData = user_data;
-  app.expand();
-  app.ready();
-  userChatId = user_data["id"];
+  // let app = window.Telegram.WebApp;
+  // let query = app.initData;
+  // let user_data_str = parseQuery(query).user;
+  // let user_data = JSON.parse(user_data_str);
+  // userData = user_data;
+  // app.expand();
+  // app.ready();
+  // userChatId = user_data["id"];
   initSwipers();
 });
 const firstBrandPage = document.querySelector('.brand-first');
@@ -68,14 +70,16 @@ const ninjaPage = document.querySelector('.ninja');
 const roadPage = document.querySelector('.road');
 const sapperPage = document.querySelector('.sapper');
 const sapperExit = sapperPage.querySelector('.sapper-exit');
+const tagPage = document.querySelector('.tag');
+const tagPageExit = document.querySelector('.tag__exit');
+const matchPage = document.querySelector('.match-three');
+const matchPageExit = matchPage.querySelector('#exit-match');
 
 gamesArray.forEach((elem, index) => {
   elem.addEventListener('click', () => {
-    if (index !== gamesArray.length - 1 && index !== gamesArray.length - 1) {
       secondBrandTitle.textContent = elem.querySelector('.brand-first__game-title').textContent;
       firstBrandPage.classList.remove('brand-first_active');
       secondBrandPage.classList.add('brand-second_active');
-    }
   })
 });
 backSecondBrandPage.addEventListener('click', () => {
@@ -169,6 +173,16 @@ secondBrandPlay.addEventListener('click', () => {
     sapperPage.classList.add('sapper_active');
     sapperInterval = startSapper();
   }
+  if (secondBrandTitle.textContent.trim() === 'Пятнашки') {
+    secondBrandPage.classList.remove('brand-second_active');
+    tagPage.classList.add('tag_active');
+    startTag();
+  }
+  if (secondBrandTitle.textContent.trim() === 'Три в ряд') {
+    secondBrandPage.classList.remove('brand-second_active');
+    matchPage.classList.add('match-three_active');
+    startMatch();
+  }
 });
 
 document.getElementById('ninja-exit').addEventListener('click', () => {
@@ -210,6 +224,19 @@ sapperExit.addEventListener('click', () => {
   sapperPage.classList.remove('sapper_active');
   sapperInterval();
   initSwipers();
+});
+
+tagPageExit.addEventListener('click', () => {
+  secondBrandPage.classList.add('brand-second_active');
+  tagPage.classList.remove('tag_active');
+  initSwipers();
+});
+
+matchPageExit.addEventListener('click', () => {
+  secondBrandPage.classList.add('brand-second_active');
+  matchPage.classList.remove('match-three_active');
+  initSwipers();
+  matchExitClicked = true;
 });
 
 // ==================== SNAKE CODE ===================
@@ -4058,4 +4085,485 @@ function startSapper() {
     generateGrid();
   });
   return endGame;
+}
+
+// ================== ПЯТНАШКИ ==================
+
+function startTag() {
+  function getRandomBool() {
+    if (Math.floor(Math.random() * 2) === 0) {
+      return true;
+    }
+  }
+  
+  function Game(context, cellSize){
+    this.state = [
+      [1,2,3,4],
+      [5,6,7,8],
+      [9,10,11,12],
+      [13,14,15,0]
+    ];
+    
+    this.color = "#FFB93B";
+  
+    this.context = context;
+    this.cellSize = cellSize;
+  
+    this.clicks = 0;
+  }
+  
+  Game.prototype.getClicks = function() {
+    return this.clicks;
+  };
+  
+  Game.prototype.cellView = function(x, y) {
+    this.context.fillStyle = this.color;
+    this.context.fillRect(
+      x + 1, 
+      y + 1, 
+      this.cellSize - 2, 
+      this.cellSize - 2
+    );
+  };
+  
+  Game.prototype.numView = function() {
+    this.context.font = "bold " + (this.cellSize/2) + "px Sans";
+    this.context.textAlign = "center";
+    this.context.textBaseline = "middle";
+    this.context.fillStyle = "#222";
+  };
+  
+  Game.prototype.draw = function() {
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+        if (this.state[i][j] > 0) {
+          this.cellView(
+            j * this.cellSize, 
+            i * this.cellSize
+          );
+          this.numView();
+          this.context.fillText(
+            this.state[i][j], 
+            j * this.cellSize + this.cellSize / 2,
+            i * this.cellSize + this.cellSize / 2
+          );
+        }
+      }
+    }
+  };
+  
+  Game.prototype.getNullCell = function(){
+    for (let i = 0; i<4; i++){
+      for (let j=0; j<4; j++){
+        if(this.state[j][i] === 0){
+          return {x: i, y: j};
+        }
+      }
+    }
+  };
+  
+  Game.prototype.move = function(x, y) {
+    let nullCell = this.getNullCell();
+    let canMoveVertical = (x - 1 == nullCell.x || x + 1 == nullCell.x) && y == nullCell.y;
+    let canMoveHorizontal = (y - 1 == nullCell.y || y + 1 == nullCell.y) && x == nullCell.x;
+  
+    if (canMoveVertical || canMoveHorizontal) {
+      this.state[nullCell.y][nullCell.x] = this.state[y][x];
+      this.state[y][x] = 0;
+      this.clicks++;
+    }
+  };
+    
+  Game.prototype.victory = function() {
+    let combination = [[1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,0]];
+    let res = true;
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+        if (combination[i][j] != this.state[i][j]) {
+          res = false;
+          break;
+        }
+      }
+    }
+    return res;
+  };
+  
+  Game.prototype.mix = function(count) {
+    let x, y;
+    for (let i = 0; i < count; i++) {
+      let nullCell = this.getNullCell();
+  
+      let verticalMove = getRandomBool();
+      let upLeft = getRandomBool();
+  
+      if (verticalMove) {
+        x = nullCell.x; 
+        if (upLeft) {
+          y = nullCell.y - 1;
+        } else {
+          y = nullCell.y + 1;
+        }
+      } else {
+        y = nullCell.y; 
+        if (upLeft) {
+          x = nullCell.x - 1;
+        } else {
+          x = nullCell.x + 1;
+        }
+      }
+  
+      if (0 <= x && x <= 3 && 0 <= y && y <= 3) {
+        this.move(x, y);
+      }
+    }
+  
+    this.clicks = 0;
+  };
+  
+  (function(){
+    let canvas = document.getElementById("tag-canvas");
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerWidth;
+  
+    let context = canvas.getContext("2d");
+    context.fillRect(0, 0, canvas.width, canvas.height);
+  
+    let cellSize = canvas.width / 4;
+  
+    let game = new Game(context, cellSize);
+    game.mix(300);
+    game.draw();
+  
+    canvas.onclick = function(e) {
+      let x = (e.pageX - canvas.offsetLeft) / cellSize | 0;
+      let y = (e.pageY - canvas.offsetTop)  / cellSize | 0;
+      onEvent(x, y); 
+    };
+  
+    canvas.ontouchend = function(e) {
+      let x = (e.touches[0].pageX - canvas.offsetLeft) / cellSize | 0;
+      let y = (e.touches[0].pageY - canvas.offsetTop)  / cellSize | 0;
+  
+      onEvent(x, y);
+    };  
+  
+    function onEvent(x, y) { 
+      game.move(x, y);
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      game.draw();
+      if (game.victory()) {
+        alert("Собрано за "+game.getClicks()+" касание!"); 
+        game.mix(300);
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        game.draw(context, cellSize);
+      }
+    }
+  })()
+}
+
+// ============= MATCH 3 GAME CODE ===============
+function startMatch() {
+  // JavaScript Document
+
+  var board;
+  var boardSize = 8;
+  var candyNum = 5;
+  var active;
+  var tileWidth;
+
+  var score;
+
+  function initBoard() {
+    $('#score-match span').text('0');
+
+    board = new Array(boardSize);
+
+    // generate board
+    for (var i = 0; i < boardSize; i++) {
+      board[i] = new Array(boardSize);
+      for (var j = 0; j < boardSize; j++) {
+        board[i][j] = Math.ceil(candyNum * Math.random());
+
+        // check for possible matches
+        if (i > 1 && j > 1) {
+          while ((board[i - 1][j] == board[i][j] && board[i - 2][j] == board[i][j]) || (board[i][j - 1] == board[i][j] && board[i][j - 2] == board[i][j])) {
+            board[i][j] = Math.ceil(candyNum * Math.random());
+          }
+        }
+        else if (i < 2 && j > 1) {
+          while (board[i][j - 1] == board[i][j] && board[i][j - 2] == board[i][j]) {
+            board[i][j] = Math.ceil(candyNum * Math.random());
+          }
+        }
+        else if (i > 1 && j < 2) {
+          while (board[i - 1][j] == board[i][j] && board[i - 2][j] == board[i][j]) {
+            board[i][j] = Math.ceil(candyNum * Math.random());
+          }
+        }
+
+        // draw tile
+        $('#board-match > div').append('<div class="tile"><a href="javascript:void;" class="candy' + board[i][j] + ' x' + i + ' y' + j + '"><span></span></a></div>');
+      }
+    }
+
+    tileWidth = $('#board-match .tile').width();
+
+    for (var i = 0; i < boardSize; i++) {
+      var offset = tileWidth * (boardSize - i - 1);
+      $('#board-match .tile .y' + i).css('left', offset);
+      $('#board-match .tile .x' + i).css('top', offset);
+    }
+
+    minDist = $('#board-match .tile a').width() / 2;
+
+    // css3 animation settings
+    $('#board-match .tile a').css('transition', 'top 0.3s, left 0.3s, background-color 0.3s, border-color 0.3s')
+      .css('-moz-transition', 'top 0.3s, left 0.3s, background-color 0.3s, border-color 0.3s')
+      .css('-webkit-transition', 'top 0.3s, left 0.3s, background-color 0.3s, border-color 0.3s')
+      .css('-o-transition', 'top 0.3s, left 0.3s, background-color 0.3s, border-color 0.3s')
+      .bind('mousedown', function (e) {
+        if (active) {
+          if ($('a.selected').length > 0 && !$(this).hasClass('selected')) {
+            var a = $('.selected');
+            $('.selected').removeClass('selected');
+
+            swapTiles(a, $(this));
+          }
+          else {
+            $(this).toggleClass('selected');
+          }
+        }
+      })
+      .bind('mouseup', function (e) {
+        if (active) {
+          if ($('a.selected').length > 0 && !$(this).hasClass('selected')) {
+            var a = $('.selected');
+            $('.selected').removeClass('selected');
+
+            swapTiles(a, $(this));
+          }
+        }
+      });
+
+    score = 0;
+
+    active = true;
+    tDamage = window.setTimeout(timeDamage, 500);
+  }
+
+  function tile(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  function swapTiles(a, b) {
+    active = false;
+    var aClass = a.attr('class');
+    var ax = parseInt(aClass.slice(aClass.search(' x') + 2, aClass.search(' x') + 3));
+    var ay = parseInt(aClass.slice(aClass.search(' y') + 2, aClass.search(' y') + 3));
+
+    var bClass = b.attr('class');
+    var bx = parseInt(bClass.slice(bClass.search(' x') + 2, bClass.search(' x') + 3));
+    var by = parseInt(bClass.slice(bClass.search(' y') + 2, bClass.search(' y') + 3));
+
+    if (((ax - bx == 1 || bx - ax == 1) && ay == by) || ((ay - by == 1 || by - ay == 1) && ax == bx)) {
+      board[ax][ay] = board[ax][ay] + board[bx][by];
+      board[bx][by] = board[ax][ay] - board[bx][by];
+      board[ax][ay] = board[ax][ay] - board[bx][by];
+
+      aLeft = a.css('left') + '';
+      bLeft = b.css('left') + '';
+      aTop = a.css('top') + '';
+      bTop = b.css('top') + '';
+      a.css('left', bLeft);
+      b.css('left', aLeft);
+      a.css('top', bTop);
+      b.css('top', aTop);
+
+      a.removeClass('x' + ax + ' y' + ay).addClass('x' + bx + ' y' + by);
+      b.removeClass('x' + bx + ' y' + by).addClass('x' + ax + ' y' + ay);
+
+      if (checkMatches()) {
+      }
+      else {
+        a.removeClass('x' + bx + ' y' + by).addClass('x' + ax + ' y' + ay);
+        b.removeClass('x' + ax + ' y' + ay).addClass('x' + bx + ' y' + by);
+
+        c = board[ax][ay];
+        board[ax][ay] = board[bx][by];
+        board[bx][by] = c;
+
+        var t = window.setTimeout(function () {
+          a.css('left', aLeft);
+          b.css('left', bLeft);
+          a.css('top', aTop);
+          b.css('top', bTop);
+        }, 300);
+      }
+    }
+  }
+
+  function checkMatches() {
+    var matches = new Array(0);
+    for (var i = 0; i < boardSize; i++) {
+      for (var j = 0; j < boardSize; j++) {
+        // check for possible matches
+        if (i > 1) {
+          if (board[i - 1][j] == board[i][j] && board[i - 2][j] == board[i][j]) {
+            var match1 = new Array(0);
+            var candyType = board[i][j];
+
+            var k = i - 2;
+            var cont = true;
+            while (cont && k < boardSize) {
+              if (board[k][j] == candyType) {
+                match1.push(new tile(k, j));
+              }
+              else {
+                cont = false;
+              }
+              k = k + 1;
+            }
+
+            matches.push(match1);
+          }
+        }
+        if (j > 1) {
+          if (board[i][j - 1] == board[i][j] && board[i][j - 2] == board[i][j]) {
+            var match1 = new Array(0);
+            var candyType = board[i][j];
+
+            var k = j - 2;
+            var cont = true;
+            while (cont && k < boardSize) {
+              if (board[i][k] == candyType) {
+                match1.push(new tile(i, k));
+              }
+              else {
+                cont = false;
+              }
+              k = k + 1;
+            }
+
+            matches.push(match1);
+          }
+        }
+      }
+    }
+
+    if (matches.length == 0) {
+      var t = window.setTimeout(function () { active = true; }, 300);
+      console.log('active timeout')
+      return false;
+
+    }
+    else {
+      window.clearTimeout(tDamage);
+
+      for (var i = 0; i < matches.length; i++) {
+        for (var j = 0; j < matches[i].length; j++) {
+          board[matches[i][j].x][matches[i][j].y] = 0;
+          $('a.x' + matches[i][j].x + '.y' + matches[i][j].y).addClass('match');
+
+          var hpWidth = ($('#remaining-hp').width() / $('#hp').width()) * 100 + 3;
+          if (hpWidth > 100) {
+            hpWidth = 100;
+          }
+          $('#remaining-hp').width(hpWidth + '%');
+          score = score + 10;
+        }
+      }
+
+      tDamage = window.setTimeout(timeDamage, 500);
+      var t = window.setTimeout(removeMatches, 300);
+
+      return true;
+    }
+  }
+
+  function removeMatches() {
+    updateScore(parseInt($('#score-match span').text()));
+
+    for (var i = 0; i < boardSize - 1; i++) {
+      for (var j = 0; j < boardSize; j++) {
+        if (board[i][j] == 0) {
+          var k = i + 1;
+          while (board[k][j] == 0 && k < boardSize - 1) {
+            k++;
+          }
+          if (k == boardSize - 1 && board[k][j] == 0) {
+          }
+          else {
+            var a = $('.x' + k + '.y' + j);
+            var b = $('.x' + i + '.y' + j);
+            a.css('top', ($('#board-match .tile').width() * (boardSize - i - 1))).removeClass('x' + k).addClass('x' + i);
+            b.removeClass('x' + i).addClass('x' + k).css('top', -tileWidth);
+            board[i][j] = board[k][j];
+            board[k][j] = 0;
+          }
+        }
+      }
+    }
+
+
+    var t = window.setTimeout(function () {
+      for (var i = 0; i < boardSize; i++) {
+        for (var j = 0; j < boardSize; j++) {
+          if (board[i][j] == 0) {
+            board[i][j] = Math.ceil(candyNum * Math.random());
+            $('.x' + i + '.y' + j).css('top', (tileWidth * (boardSize - i - 2)))
+              .removeClass().addClass('candy' + board[i][j] + ' x' + i + ' y' + j)
+              .css('top', (tileWidth * (boardSize - i - 1)));
+          }
+        }
+      }
+      var t2 = window.setTimeout(checkMatches, 300);
+    }, 300);
+  }
+
+  function updateScore(s) {
+    if (s < score) {
+      s = s + 1;
+      $('#score-match span').text(s);
+      var t = window.setTimeout(() => {
+        updateScore(s)
+      }, 10);
+    }
+  }
+
+  function printBoard() {
+    for (var i = 0; i < boardSize; i++) {
+      var s = '';
+      for (var j = 0; j < boardSize; j++) {
+        s = s + board[i][j] + ' ';
+      }
+      console.log(s);
+    }
+  }
+
+  var tDamage;
+
+  function timeDamage() {
+    var hpWidth = ($('#remaining-hp').width() / $('#hp').width()) * 100 - 1;
+    $('#remaining-hp').width(hpWidth + '%');
+
+    if (hpWidth < 0) {
+      gameOver();
+    }
+    else {
+      tDamage = window.setTimeout(timeDamage, 500);
+    }
+  }
+
+  function gameOver() {
+    $('#game-over').fadeIn(200).click(function () {
+      $('#board-match > div .tile').remove();
+      $('#remaining-hp').width('100%');
+      $('#game-over').fadeOut(500);
+      var t = window.setTimeout(initBoard, 500);
+    });
+  }
+  if (!matchExitClicked) {
+    initBoard();
+  }
 }

@@ -123,7 +123,20 @@
             </div>
             <p class="brand-first__game-play">Играть</p>
           </div>
-          <div class="brand-first__game-full brand-first__game-full_later">
+          <div class="brand-first__game-full">
+            <div class="brand-first__game">
+              <!-- <img class="brand-first__game-new" src="./assets/brand/images/game-new.svg" alt=""> -->
+              <img class="brand-first__game-img" src="./assets/brand/images/game-img.png" alt="">
+              <h2 class="brand-first__game-title">
+                Пятнашки
+              </h2>
+              <p class="brand-first__game-subtitle">
+                Классический раннер со сбором предметов
+              </p>
+            </div>
+            <p class="brand-first__game-play">Играть</p>
+          </div>
+          <div class="brand-first__game-full">
             <div class="brand-first__game">
               <!-- <img class="brand-first__game-new" src="./assets/brand/images/game-new.svg" alt=""> -->
               <img class="brand-first__game-img" src="./assets/brand/images/game-img.png" alt="">
@@ -134,7 +147,7 @@
                 Классический раннер со сбором предметов
               </p>
             </div>
-            <p class="brand-first__game-play">Скоро</p>
+            <p class="brand-first__game-play">Играть</p>
           </div>
         </div>
       </div>
@@ -574,6 +587,27 @@
         <div class="buttons">
           <button class="sapper-restart">Restart Game</button>
           <button class="sapper-exit">Exit</button>
+        </div>
+      </div>
+    </div>
+    <div class="tag">
+      <canvas id="tag-canvas"></canvas>
+      <button class="tag__exit" type="button">Выход</button>
+    </div>
+    <div class="match-three">
+      <div id="game-match">
+        <div id="score-match">Счёт <span>0</span></div>
+        <div id="exit-match">Выйти</div>
+        <div id="health">
+          <div id="hp">
+              <div id="remaining-hp"></div>
+          </div>
+        </div>
+        <div id="board-match">
+          <div></div>
+        </div>
+        <div id="game-over">
+          GAME OVER
         </div>
       </div>
     </div>
