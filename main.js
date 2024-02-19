@@ -86,14 +86,14 @@ function randomInteger(min, max) {
   return Math.floor(rand);
 }
 document.addEventListener('DOMContentLoaded', () => {
-  // let app = window.Telegram.WebApp;
-  // let query = app.initData;
-  // let user_data_str = parseQuery(query).user;
-  // let user_data = JSON.parse(user_data_str);
-  // userData = user_data;
-  // app.expand();
-  // app.ready();
-  // userChatId = user_data["id"];
+  let app = window.Telegram.WebApp;
+  let query = app.initData;
+  let user_data_str = parseQuery(query).user;
+  let user_data = JSON.parse(user_data_str);
+  userData = user_data;
+  app.expand();
+  app.ready();
+  userChatId = user_data["id"];
   initSwipers();
 });
 const firstBrandPage = document.querySelector('.brand-first');
