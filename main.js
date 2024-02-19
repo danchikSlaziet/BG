@@ -2,6 +2,9 @@
 let isSnakeStarted = false;
 let resetSnake;
 
+let firstName;
+let lastName;
+
 let isRunnerStarted = false;
 let stopRunner;
 let restartRunner;
@@ -26,6 +29,8 @@ let matchExitClicked = false;
 
 let BrandSwiper;
 let AchieveSwiper;
+let PersSwiperLeft;
+let PersSwiperRightl
 function parseQuery(queryString) {
   let query = {};
   let pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
@@ -44,36 +49,41 @@ function initSwipers() {
   });
 }
 function initPersSwipers() {
-  const PersSwiperLeft = new Swiper('.swiper-left', {
+  PersSwiperLeft = new Swiper('.swiper-left', {
     effect: 'coverflow',
-    slidesPerView: 4.45,
+    slidesPerView: 5.5,
     centeredSlides: true,
     spaceBetween: 3,
     direction: 'vertical',
     coverflowEffect: {
       slideShadows: false,
       // stretch: 3,
-      rotate: -25,
-      stretch: 4,
-      depth: 150
+      rotate: -15,
+      // scale: .99,
+      // stretch: -5,
+      depth: 150,
     },
-    loop: true
   });
-  const PersSwiperRight = new Swiper('.swiper-right', {
+  PersSwiperRight = new Swiper('.swiper-right', {
     effect: 'coverflow',
-    slidesPerView: 4.45,
+    slidesPerView: 5.5,
     centeredSlides: true,
     spaceBetween: 3,
     direction: 'vertical',
     coverflowEffect: {
       slideShadows: false,
       // stretch: 3,
-      rotate: -25,
-      stretch: 4,
-      depth: 150
+      rotate: -15,
+      // scale: .99,
+      // stretch: -5,
+      depth: 150,
     },
-    loop: true
   });
+}
+function randomInteger(min, max) {
+  // случайное число от min до (max+1)
+  let rand = min + Math.random() * (max + 1 - min);
+  return Math.floor(rand);
 }
 document.addEventListener('DOMContentLoaded', () => {
   // let app = window.Telegram.WebApp;
@@ -85,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // app.ready();
   // userChatId = user_data["id"];
   initSwipers();
-  initPersSwipers();
 });
 const firstBrandPage = document.querySelector('.brand-first');
 const gamesArray = firstBrandPage.querySelectorAll('.brand-first__game-full');
@@ -110,6 +119,28 @@ const matchPageExit = matchPage.querySelector('#exit-match');
 const brandWelcome = document.querySelector('.brand-welcome');
 const brandWelcomeBtn = brandWelcome.querySelector('.brand-welcome__button');
 const brandPers = document.querySelector('.brand-pers');
+const brandPersRandom = brandPers.querySelector('.brand-pers__button_random');
+const brandPersNext = brandPers.querySelector('.brand-pers__button_next');
+
+brandPersRandom.addEventListener('click', () => {
+  PersSwiperLeft.slideTo(randomInteger(0, PersSwiperLeft.slides.length - 1));
+  PersSwiperRight.slideTo(randomInteger(0, PersSwiperRight.slides.length - 1));
+});
+brandPersNext.addEventListener('click', () => {
+  brandPers.querySelectorAll('.swiper-slide-active .swiper__text').forEach((elem, index) => {
+    if (index === 0) {
+      firstName = elem.innerText;
+    }
+    else {
+      lastName = elem.innerText;
+    }
+  })
+  PersSwiperRight.destroy();
+  PersSwiperLeft.destroy();
+  brandPers.classList.remove('brand-pers_active');
+  firstBrandPage.classList.add('brand-first_active');
+  console.log(firstName, lastName)
+})
 
 gamesArray.forEach((elem, index) => {
   elem.addEventListener('click', () => {
@@ -224,6 +255,11 @@ secondBrandPlay.addEventListener('click', () => {
 brandWelcomeBtn.addEventListener('click', () => {
   brandWelcome.classList.remove('brand-welcome_active');
   brandPers.classList.add('brand-pers_active');
+  initPersSwipers();
+  setTimeout(() => {
+    PersSwiperLeft.slideTo(Math.floor(PersSwiperLeft.slides.length/2));
+    PersSwiperRight.slideTo(Math.floor(PersSwiperRight.slides.length/2));
+  }, 50)
 });
 
 document.getElementById('ninja-exit').addEventListener('click', () => {

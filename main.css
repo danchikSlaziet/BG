@@ -62,6 +62,7 @@ a,a:hover{
   transform: translateX(-100%);
   background-color: #7A8EFE;
   position: absolute;
+  display: none;
   top: 0;
   left: 0;
   padding: 0 24px;
@@ -69,7 +70,6 @@ a,a:hover{
   min-height: 100vh;
   font-weight: 400;
   transition: visibility .25s, transform .25s linear;
-  display: flex;
   flex-direction: column;
   align-items: center;
 }
@@ -77,6 +77,7 @@ a,a:hover{
   pointer-events: all;
   visibility: visible;
   transform: translateX(0);
+  display: flex;
 }
 .brand-pers__logo {
   margin-top: 24px;
@@ -104,6 +105,7 @@ a,a:hover{
   gap: 12px;
   margin-bottom: 23px;
   width: 100%;
+  margin-top: auto;
 }
 .brand-pers__button {
   width: 100%;
@@ -153,15 +155,40 @@ a,a:hover{
   margin-bottom: 65px;
   position: relative;
 }
+.brand-pers__swipers::after {
+    content: '';
+    position: absolute;
+    margin: 0 auto;
+    width: 100%;
+    z-index: 100;
+    height: 100px;
+    bottom: 0;
+    background: linear-gradient(to top,#7A8EFE 2%, transparent 100%);
+    pointer-events: none;
+    z-index: 10;
+}
+.brand-pers__swipers::before {
+    content: '';
+    position: absolute;
+    margin: 0 auto;
+    width: 100%;
+    z-index: 100;
+    height: 100px;
+    top: 0;
+    background: linear-gradient(to bottom,#7A8EFE 2%, transparent 100%);
+    pointer-events: none;
+    z-index: 10;
+}
 .swiper-left, .swiper-right {
   height: 100%;
 }
 .brand-pers__swiper {
-  height: 174px;
+  height: 210px;
 }
 .brand-pers__help-bg {
+  pointer-events: none;
   position: absolute;
-  top: 47.5%;
+  top: 48.1%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 350px;
@@ -184,7 +211,7 @@ a,a:hover{
   min-height: 100vh;
   font-weight: 400;
   transition: visibility .25s, transform .25s linear;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
 }
@@ -197,9 +224,11 @@ a,a:hover{
   margin-bottom: 38px;
 }
 .brand-welcome__main-img {
-  width: 100%;
+  width: 300px;
   margin-bottom: 45px;
   margin-top: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 .brand-welcome__title {
   color: #FFF;
@@ -247,12 +276,55 @@ a,a:hover{
   pointer-events: all;
   visibility: visible;
   transform: translateX(0);
+  display: flex;
 }
 
 .brand {
   position: relative;
 }
 
+.rating-button {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  top: 27px;
+  right: 14px;
+  border: 1px solid;
+  border-radius: 139px;
+  padding: 7px 11px;
+  border: 1px solid #FFBB0D;
+  transition: opacity .24s linear;
+}
+.rating-button:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+.rating-button__coin {
+  display: block;
+  width: 15px;
+  object-fit: cover;
+  object-position: center center;
+  padding-bottom: 1.2px;
+}
+.rating-button__score {
+  font-family: "TT";
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 19px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: #302E2D;
+}
+.rating-button__arrow {
+  display: block;
+  width: 6.5px;
+  transition: transform .24s linear;
+}
+.rating-button:hover .rating-button__arrow {
+  transform: translateX(3px);
+}
 .brand-first {
   visibility: hidden;
   pointer-events: none;
@@ -292,6 +364,7 @@ a,a:hover{
   width: 141px;
   height: 33px;
   margin: 0 auto 35px auto;
+  margin-left: 0;
 }
 .brand-first__title {
   color: #302E2D;
