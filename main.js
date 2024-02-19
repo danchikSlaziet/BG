@@ -80,20 +80,21 @@ function initPersSwipers() {
     },
   });
 }
+
 function randomInteger(min, max) {
   // случайное число от min до (max+1)
   let rand = min + Math.random() * (max + 1 - min);
   return Math.floor(rand);
 }
 document.addEventListener('DOMContentLoaded', () => {
-  let app = window.Telegram.WebApp;
-  let query = app.initData;
-  let user_data_str = parseQuery(query).user;
-  let user_data = JSON.parse(user_data_str);
-  userData = user_data;
-  app.expand();
-  app.ready();
-  userChatId = user_data["id"];
+  // let app = window.Telegram.WebApp;
+  // let query = app.initData;
+  // let user_data_str = parseQuery(query).user;
+  // let user_data = JSON.parse(user_data_str);
+  // userData = user_data;
+  // app.expand();
+  // app.ready();
+  // userChatId = user_data["id"];
   initSwipers();
 });
 const firstBrandPage = document.querySelector('.brand-first');
@@ -121,11 +122,26 @@ const brandWelcomeBtn = brandWelcome.querySelector('.brand-welcome__button');
 const brandPers = document.querySelector('.brand-pers');
 const brandPersRandom = brandPers.querySelector('.brand-pers__button_random');
 const brandPersNext = brandPers.querySelector('.brand-pers__button_next');
+const ratingPage = document.querySelector('.rating-page');
+const ratingPageBack = ratingPage.querySelector('.rating-page__back');
+
+function vibro() {
+  if ("vibrate" in navigator) {
+    // Вибрируем устройство в течение 1000 миллисекунд (1 секунда)
+    navigator.vibrate(10);
+  } else {
+    // Ваш браузер не поддерживает API вибрации
+    console.log("Ваш браузер не поддерживает API вибрации.");
+  }
+}
 
 brandPersRandom.addEventListener('click', () => {
   PersSwiperLeft.slideTo(randomInteger(0, PersSwiperLeft.slides.length - 1));
   PersSwiperRight.slideTo(randomInteger(0, PersSwiperRight.slides.length - 1));
+    // Проверяем поддержку API вибрации
+  vibro();
 });
+
 brandPersNext.addEventListener('click', () => {
   brandPers.querySelectorAll('.swiper-slide-active .swiper__text').forEach((elem, index) => {
     if (index === 0) {
@@ -134,7 +150,8 @@ brandPersNext.addEventListener('click', () => {
     else {
       lastName = elem.innerText;
     }
-  })
+  });
+  ratingPage.querySelector('.rating-page__rating_user .rating-page__rating-name').textContent = `${firstName} ${lastName}`;
   PersSwiperRight.destroy();
   PersSwiperLeft.destroy();
   brandPers.classList.remove('brand-pers_active');
@@ -252,6 +269,16 @@ secondBrandPlay.addEventListener('click', () => {
   }
 });
 
+document.querySelector('.rating-button').addEventListener('click', () => {
+  ratingPage.classList.add('rating-page_active');
+  firstBrandPage.classList.remove('brand-first_active');
+});
+
+ratingPageBack.addEventListener('click', () => {
+  ratingPage.classList.remove('rating-page_active');
+  firstBrandPage.classList.add('brand-first_active');
+})
+
 brandWelcomeBtn.addEventListener('click', () => {
   brandWelcome.classList.remove('brand-welcome_active');
   brandPers.classList.add('brand-pers_active');
@@ -259,6 +286,12 @@ brandWelcomeBtn.addEventListener('click', () => {
   setTimeout(() => {
     PersSwiperLeft.slideTo(Math.floor(PersSwiperLeft.slides.length/2));
     PersSwiperRight.slideTo(Math.floor(PersSwiperRight.slides.length/2));
+    PersSwiperRight.on('slideChange', function () {
+      vibro();
+    });
+    PersSwiperLeft.on('slideChange', function () {
+      vibro();
+    });
   }, 50)
 });
 
