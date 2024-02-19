@@ -126,12 +126,18 @@ const ratingPage = document.querySelector('.rating-page');
 const ratingPageBack = ratingPage.querySelector('.rating-page__back');
 
 function vibro() {
-  if ("vibrate" in navigator) {
-    // Вибрируем устройство в течение 1000 миллисекунд (1 секунда)
-    navigator.vibrate(10);
-  } else {
-    // Ваш браузер не поддерживает API вибрации
-    console.log("Ваш браузер не поддерживает API вибрации.");
+  let detect = new MobileDetect(window.navigator.userAgent);
+  if (detect.os() === 'iOS') {
+    window.Telegram.WebApp.HapticFeedback.impactOccurred("light");
+  }
+  else {
+    if ("vibrate" in navigator) {
+      // Вибрируем устройство в течение 1000 миллисекунд (1 секунда)
+      navigator.vibrate(10);
+    } else {
+      // Ваш браузер не поддерживает API вибрации
+      console.log("Ваш браузер не поддерживает API вибрации.");
+    }
   }
 }
 

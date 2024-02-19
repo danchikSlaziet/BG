@@ -760,6 +760,7 @@ a,a:hover{
   background-color: #FFFFFF69;
   border-radius: 45px;
   backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 .brand-first__release-city {
   position: absolute;
