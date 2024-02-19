@@ -43,16 +43,49 @@ function initSwipers() {
     slidesPerView: 'auto',
   });
 }
+function initPersSwipers() {
+  const PersSwiperLeft = new Swiper('.swiper-left', {
+    effect: 'coverflow',
+    slidesPerView: 4.45,
+    centeredSlides: true,
+    spaceBetween: 3,
+    direction: 'vertical',
+    coverflowEffect: {
+      slideShadows: false,
+      // stretch: 3,
+      rotate: -25,
+      stretch: 4,
+      depth: 150
+    },
+    loop: true
+  });
+  const PersSwiperRight = new Swiper('.swiper-right', {
+    effect: 'coverflow',
+    slidesPerView: 4.45,
+    centeredSlides: true,
+    spaceBetween: 3,
+    direction: 'vertical',
+    coverflowEffect: {
+      slideShadows: false,
+      // stretch: 3,
+      rotate: -25,
+      stretch: 4,
+      depth: 150
+    },
+    loop: true
+  });
+}
 document.addEventListener('DOMContentLoaded', () => {
-  let app = window.Telegram.WebApp;
-  let query = app.initData;
-  let user_data_str = parseQuery(query).user;
-  let user_data = JSON.parse(user_data_str);
-  userData = user_data;
-  app.expand();
-  app.ready();
-  userChatId = user_data["id"];
+  // let app = window.Telegram.WebApp;
+  // let query = app.initData;
+  // let user_data_str = parseQuery(query).user;
+  // let user_data = JSON.parse(user_data_str);
+  // userData = user_data;
+  // app.expand();
+  // app.ready();
+  // userChatId = user_data["id"];
   initSwipers();
+  initPersSwipers();
 });
 const firstBrandPage = document.querySelector('.brand-first');
 const gamesArray = firstBrandPage.querySelectorAll('.brand-first__game-full');
@@ -74,6 +107,9 @@ const tagPage = document.querySelector('.tag');
 const tagPageExit = document.querySelector('.tag__exit');
 const matchPage = document.querySelector('.match-three');
 const matchPageExit = matchPage.querySelector('#exit-match');
+const brandWelcome = document.querySelector('.brand-welcome');
+const brandWelcomeBtn = brandWelcome.querySelector('.brand-welcome__button');
+const brandPers = document.querySelector('.brand-pers');
 
 gamesArray.forEach((elem, index) => {
   elem.addEventListener('click', () => {
@@ -183,6 +219,11 @@ secondBrandPlay.addEventListener('click', () => {
     matchPage.classList.add('match-three_active');
     startMatch();
   }
+});
+
+brandWelcomeBtn.addEventListener('click', () => {
+  brandWelcome.classList.remove('brand-welcome_active');
+  brandPers.classList.add('brand-pers_active');
 });
 
 document.getElementById('ninja-exit').addEventListener('click', () => {
@@ -4266,304 +4307,307 @@ function startMatch() {
   // JavaScript Document
 
   var board;
-  var boardSize = 8;
-  var candyNum = 5;
-  var active;
-  var tileWidth;
+var boardSize = 8;
+var candyNum = 5;
+var active;
+var tileWidth;
+var score;
+var timeInterval;
 
-  var score;
+function initBoard() {
+  $('#score-match span').text('0');
+  $('#time-match span').text('0');
 
-  function initBoard() {
-    $('#score-match span').text('0');
+  board = new Array(boardSize);
 
-    board = new Array(boardSize);
-
-    // generate board
+  // generate board
+  do {
     for (var i = 0; i < boardSize; i++) {
       board[i] = new Array(boardSize);
       for (var j = 0; j < boardSize; j++) {
         board[i][j] = Math.ceil(candyNum * Math.random());
-
-        // check for possible matches
-        if (i > 1 && j > 1) {
-          while ((board[i - 1][j] == board[i][j] && board[i - 2][j] == board[i][j]) || (board[i][j - 1] == board[i][j] && board[i][j - 2] == board[i][j])) {
-            board[i][j] = Math.ceil(candyNum * Math.random());
-          }
-        }
-        else if (i < 2 && j > 1) {
-          while (board[i][j - 1] == board[i][j] && board[i][j - 2] == board[i][j]) {
-            board[i][j] = Math.ceil(candyNum * Math.random());
-          }
-        }
-        else if (i > 1 && j < 2) {
-          while (board[i - 1][j] == board[i][j] && board[i - 2][j] == board[i][j]) {
-            board[i][j] = Math.ceil(candyNum * Math.random());
-          }
-        }
-
-        // draw tile
-        $('#board-match > div').append('<div class="tile"><a href="javascript:void;" class="candy' + board[i][j] + ' x' + i + ' y' + j + '"><span></span></a></div>');
       }
     }
+  } while (checkInitialMatches());
 
-    tileWidth = $('#board-match .tile').width();
-
-    for (var i = 0; i < boardSize; i++) {
-      var offset = tileWidth * (boardSize - i - 1);
-      $('#board-match .tile .y' + i).css('left', offset);
-      $('#board-match .tile .x' + i).css('top', offset);
-    }
-
-    minDist = $('#board-match .tile a').width() / 2;
-
-    // css3 animation settings
-    $('#board-match .tile a').css('transition', 'top 0.3s, left 0.3s, background-color 0.3s, border-color 0.3s')
-      .css('-moz-transition', 'top 0.3s, left 0.3s, background-color 0.3s, border-color 0.3s')
-      .css('-webkit-transition', 'top 0.3s, left 0.3s, background-color 0.3s, border-color 0.3s')
-      .css('-o-transition', 'top 0.3s, left 0.3s, background-color 0.3s, border-color 0.3s')
-      .bind('mousedown', function (e) {
-        if (active) {
-          if ($('a.selected').length > 0 && !$(this).hasClass('selected')) {
-            var a = $('.selected');
-            $('.selected').removeClass('selected');
-
-            swapTiles(a, $(this));
-          }
-          else {
-            $(this).toggleClass('selected');
-          }
-        }
-      })
-      .bind('mouseup', function (e) {
-        if (active) {
-          if ($('a.selected').length > 0 && !$(this).hasClass('selected')) {
-            var a = $('.selected');
-            $('.selected').removeClass('selected');
-
-            swapTiles(a, $(this));
-          }
-        }
-      });
-
-    score = 0;
-
-    active = true;
-    tDamage = window.setTimeout(timeDamage, 500);
-  }
-
-  function tile(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-
-  function swapTiles(a, b) {
-    active = false;
-    var aClass = a.attr('class');
-    var ax = parseInt(aClass.slice(aClass.search(' x') + 2, aClass.search(' x') + 3));
-    var ay = parseInt(aClass.slice(aClass.search(' y') + 2, aClass.search(' y') + 3));
-
-    var bClass = b.attr('class');
-    var bx = parseInt(bClass.slice(bClass.search(' x') + 2, bClass.search(' x') + 3));
-    var by = parseInt(bClass.slice(bClass.search(' y') + 2, bClass.search(' y') + 3));
-
-    if (((ax - bx == 1 || bx - ax == 1) && ay == by) || ((ay - by == 1 || by - ay == 1) && ax == bx)) {
-      board[ax][ay] = board[ax][ay] + board[bx][by];
-      board[bx][by] = board[ax][ay] - board[bx][by];
-      board[ax][ay] = board[ax][ay] - board[bx][by];
-
-      aLeft = a.css('left') + '';
-      bLeft = b.css('left') + '';
-      aTop = a.css('top') + '';
-      bTop = b.css('top') + '';
-      a.css('left', bLeft);
-      b.css('left', aLeft);
-      a.css('top', bTop);
-      b.css('top', aTop);
-
-      a.removeClass('x' + ax + ' y' + ay).addClass('x' + bx + ' y' + by);
-      b.removeClass('x' + bx + ' y' + by).addClass('x' + ax + ' y' + ay);
-
-      if (checkMatches()) {
-      }
-      else {
-        a.removeClass('x' + bx + ' y' + by).addClass('x' + ax + ' y' + ay);
-        b.removeClass('x' + ax + ' y' + ay).addClass('x' + bx + ' y' + by);
-
-        c = board[ax][ay];
-        board[ax][ay] = board[bx][by];
-        board[bx][by] = c;
-
-        var t = window.setTimeout(function () {
-          a.css('left', aLeft);
-          b.css('left', bLeft);
-          a.css('top', aTop);
-          b.css('top', bTop);
-        }, 300);
-      }
+  // draw board
+  for (var i = 0; i < boardSize; i++) {
+    for (var j = 0; j < boardSize; j++) {
+      $('#board-match > div').append('<div class="tile"><a href="javascript:void;" class="candy' + board[i][j] + ' x' + i + ' y' + j + '"><span></span></a></div>');
     }
   }
 
-  function checkMatches() {
-    var matches = new Array(0);
-    for (var i = 0; i < boardSize; i++) {
-      for (var j = 0; j < boardSize; j++) {
-        // check for possible matches
-        if (i > 1) {
-          if (board[i - 1][j] == board[i][j] && board[i - 2][j] == board[i][j]) {
-            var match1 = new Array(0);
-            var candyType = board[i][j];
+  tileWidth = $('#board-match .tile').width();
 
-            var k = i - 2;
-            var cont = true;
-            while (cont && k < boardSize) {
-              if (board[k][j] == candyType) {
-                match1.push(new tile(k, j));
-              }
-              else {
-                cont = false;
-              }
-              k = k + 1;
-            }
+  for (var i = 0; i < boardSize; i++) {
+    var offset = tileWidth * (boardSize - i - 1);
+    $('#board-match .tile .y' + i).css('left', offset);
+    $('#board-match .tile .x' + i).css('top', offset);
+  }
 
-            matches.push(match1);
-          }
+  minDist = $('#board-match .tile a').width() / 2;
+
+  // css3 animation settings
+  $('#board-match .tile a').css('transition', 'top 0.3s, left 0.3s, background-color 0.3s, border-color 0.3s')
+    .css('-moz-transition', 'top 0.3s, left 0.3s, background-color 0.3s, border-color 0.3s')
+    .css('-webkit-transition', 'top 0.3s, left 0.3s, background-color 0.3s, border-color 0.3s')
+    .css('-o-transition', 'top 0.3s, left 0.3s, background-color 0.3s, border-color 0.3s')
+    .bind('mousedown', function (e) {
+      if (active) {
+        if ($('a.selected').length > 0 && !$(this).hasClass('selected')) {
+          var a = $('.selected');
+          $('.selected').removeClass('selected');
+
+          swapTiles(a, $(this));
         }
-        if (j > 1) {
-          if (board[i][j - 1] == board[i][j] && board[i][j - 2] == board[i][j]) {
-            var match1 = new Array(0);
-            var candyType = board[i][j];
+        else {
+          $(this).toggleClass('selected');
+        }
+      }
+    })
+    .bind('mouseup', function (e) {
+      if (active) {
+        if ($('a.selected').length > 0 && !$(this).hasClass('selected')) {
+          var a = $('.selected');
+          $('.selected').removeClass('selected');
 
-            var k = j - 2;
-            var cont = true;
-            while (cont && k < boardSize) {
-              if (board[i][k] == candyType) {
-                match1.push(new tile(i, k));
-              }
-              else {
-                cont = false;
-              }
-              k = k + 1;
-            }
+          swapTiles(a, $(this));
+        }
+      }
+    });
 
-            matches.push(match1);
-          }
+  score = 0;
+  updateTime();
+
+  active = true;
+  tDamage = window.setTimeout(timeDamage, 500);
+}
+
+function updateTime() {
+  timeInterval = setInterval(function () {
+    var time = parseInt($('#time-match span').text());
+    $('#time-match span').text(time + 1);
+  }, 1000);
+}
+
+function checkInitialMatches() {
+  for (var i = 0; i < boardSize; i++) {
+    for (var j = 0; j < boardSize; j++) {
+      // Check for horizontal matches
+      if (j < boardSize - 2) {
+        if (board[i][j] === board[i][j + 1] && board[i][j] === board[i][j + 2]) {
+          return true;
+        }
+      }
+      // Check for vertical matches
+      if (i < boardSize - 2) {
+        if (board[i][j] === board[i + 1][j] && board[i][j] === board[i + 2][j]) {
+          return true;
+        }
+      }
+      // Check for 2x2 square matches
+      if (i < boardSize - 1 && j < boardSize - 1) {
+        if (board[i][j] === board[i + 1][j] && board[i][j] === board[i][j + 1] && board[i][j] === board[i + 1][j + 1]) {
+          return true;
         }
       }
     }
+  }
+  return false;
+}
 
-    if (matches.length == 0) {
-      var t = window.setTimeout(function () { active = true; }, 300);
-      console.log('active timeout')
-      return false;
+function tile(x, y) {
+  this.x = x;
+  this.y = y;
+}
 
+function swapTiles(a, b) {
+  active = false;
+  var aClass = a.attr('class');
+  var ax = parseInt(aClass.slice(aClass.search(' x') + 2, aClass.search(' x') + 3));
+  var ay = parseInt(aClass.slice(aClass.search(' y') + 2, aClass.search(' y') + 3));
+
+  var bClass = b.attr('class');
+  var bx = parseInt(bClass.slice(bClass.search(' x') + 2, bClass.search(' x') + 3));
+  var by = parseInt(bClass.slice(bClass.search(' y') + 2, bClass.search(' y') + 3));
+
+  if (((ax - bx == 1 || bx - ax == 1) && ay == by) || ((ay - by == 1 || by - ay == 1) && ax == bx)) {
+    board[ax][ay] = board[ax][ay] + board[bx][by];
+    board[bx][by] = board[ax][ay] - board[bx][by];
+    board[ax][ay] = board[ax][ay] - board[bx][by];
+
+    aLeft = a.css('left') + '';
+    bLeft = b.css('left') + '';
+    aTop = a.css('top') + '';
+    bTop = b.css('top') + '';
+    a.css('left', bLeft);
+    b.css('left', aLeft);
+    a.css('top', bTop);
+    b.css('top', aTop);
+
+    a.removeClass('x' + ax + ' y' + ay).addClass('x' + bx + ' y' + by);
+    b.removeClass('x' + bx + ' y' + by).addClass('x' + ax + ' y' + ay);
+
+    if (checkMatches()) {
     }
     else {
-      window.clearTimeout(tDamage);
+      a.removeClass('x' + bx + ' y' + by).addClass('x' + ax + ' y' + ay);
+      b.removeClass('x' + ax + ' y' + ay).addClass('x' + bx + ' y' + by);
 
-      for (var i = 0; i < matches.length; i++) {
-        for (var j = 0; j < matches[i].length; j++) {
-          board[matches[i][j].x][matches[i][j].y] = 0;
-          $('a.x' + matches[i][j].x + '.y' + matches[i][j].y).addClass('match');
+      c = board[ax][ay];
+      board[ax][ay] = board[bx][by];
+      board[bx][by] = c;
 
-          var hpWidth = ($('#remaining-hp').width() / $('#hp').width()) * 100 + 3;
-          if (hpWidth > 100) {
-            hpWidth = 100;
-          }
-          $('#remaining-hp').width(hpWidth + '%');
-          score = score + 10;
-        }
+      var t = window.setTimeout(function () {
+        a.css('left', aLeft);
+        b.css('left', bLeft);
+        a.css('top', aTop);
+        b.css('top', bTop);
+      }, 300);
+    }
+  }
+}
+
+function checkMatches() {
+  var matches = [];
+
+  // Check for square matches
+  for (var i = 0; i < boardSize - 1; i++) {
+    for (var j = 0; j < boardSize - 1; j++) {
+      if (board[i][j] == board[i][j + 1] && board[i][j] == board[i + 1][j] && board[i][j] == board[i + 1][j + 1]) {
+        matches.push(new tile(i, j));
+        matches.push(new tile(i, j + 1));
+        matches.push(new tile(i + 1, j));
+        matches.push(new tile(i + 1, j + 1));
       }
-
-      tDamage = window.setTimeout(timeDamage, 500);
-      var t = window.setTimeout(removeMatches, 300);
-
-      return true;
     }
   }
 
-  function removeMatches() {
-    updateScore(parseInt($('#score-match span').text()));
+  // Check for row matches
+  for (var i = 0; i < boardSize; i++) {
+    for (var j = 0; j < boardSize - 2; j++) {
+      if (board[i][j] == board[i][j + 1] && board[i][j] == board[i][j + 2]) {
+        matches.push(new tile(i, j));
+        matches.push(new tile(i, j + 1));
+        matches.push(new tile(i, j + 2));
+      }
+    }
+  }
 
-    for (var i = 0; i < boardSize - 1; i++) {
+  // Check for column matches
+  for (var i = 0; i < boardSize - 2; i++) {
+    for (var j = 0; j < boardSize; j++) {
+      if (board[i][j] == board[i + 1][j] && board[i][j] == board[i + 2][j]) {
+        matches.push(new tile(i, j));
+        matches.push(new tile(i + 1, j));
+        matches.push(new tile(i + 2, j));
+      }
+    }
+  }
+
+  if (matches.length === 0) {
+    var t = window.setTimeout(function () { active = true; }, 300);
+    return false;
+  } else {
+    window.clearTimeout(tDamage);
+
+    for (var i = 0; i < matches.length; i++) {
+      var x = matches[i].x;
+      var y = matches[i].y;
+      board[x][y] = 0;
+      $('.x' + x + '.y' + y).addClass('match');
+      score += 10;
+    }
+
+    tDamage = window.setTimeout(timeDamage, 500);
+    var t = window.setTimeout(removeMatches, 300);
+
+    return true;
+  }
+}
+
+function removeMatches() {
+  updateScore(parseInt($('#score-match span').text()));
+
+  for (var i = 0; i < boardSize - 1; i++) {
+    for (var j = 0; j < boardSize; j++) {
+      if (board[i][j] == 0) {
+        var k = i + 1;
+        while (board[k][j] == 0 && k < boardSize - 1) {
+          k++;
+        }
+        if (k == boardSize - 1 && board[k][j] == 0) {
+        } else {
+          var a = $('.x' + k + '.y' + j);
+          var b = $('.x' + i + '.y' + j);
+          a.css('top', ($('#board-match .tile').width() * (boardSize - i - 1))).removeClass('x' + k).addClass('x' + i);
+          b.removeClass('x' + i).addClass('x' + k).css('top', -tileWidth);
+          board[i][j] = board[k][j];
+          board[k][j] = 0;
+        }
+      }
+    }
+  }
+
+  var t = window.setTimeout(function () {
+    for (var i = 0; i < boardSize; i++) {
       for (var j = 0; j < boardSize; j++) {
         if (board[i][j] == 0) {
-          var k = i + 1;
-          while (board[k][j] == 0 && k < boardSize - 1) {
-            k++;
-          }
-          if (k == boardSize - 1 && board[k][j] == 0) {
-          }
-          else {
-            var a = $('.x' + k + '.y' + j);
-            var b = $('.x' + i + '.y' + j);
-            a.css('top', ($('#board-match .tile').width() * (boardSize - i - 1))).removeClass('x' + k).addClass('x' + i);
-            b.removeClass('x' + i).addClass('x' + k).css('top', -tileWidth);
-            board[i][j] = board[k][j];
-            board[k][j] = 0;
-          }
+          board[i][j] = Math.ceil(candyNum * Math.random());
+          $('.x' + i + '.y' + j).css('top', (tileWidth * (boardSize - i - 2)))
+            .removeClass().addClass('candy' + board[i][j] + ' x' + i + ' y' + j)
+            .css('top', (tileWidth * (boardSize - i - 1)));
         }
       }
     }
+    var t2 = window.setTimeout(checkMatches, 300);
+  }, 300);
+}
 
-
-    var t = window.setTimeout(function () {
-      for (var i = 0; i < boardSize; i++) {
-        for (var j = 0; j < boardSize; j++) {
-          if (board[i][j] == 0) {
-            board[i][j] = Math.ceil(candyNum * Math.random());
-            $('.x' + i + '.y' + j).css('top', (tileWidth * (boardSize - i - 2)))
-              .removeClass().addClass('candy' + board[i][j] + ' x' + i + ' y' + j)
-              .css('top', (tileWidth * (boardSize - i - 1)));
-          }
-        }
-      }
-      var t2 = window.setTimeout(checkMatches, 300);
-    }, 300);
+function updateScore(s) {
+  if (s < score) {
+    s = s + 1;
+    $('#score-match span').text(s);
+    var t = window.setTimeout(() => {
+      updateScore(s);
+    }, 10);
   }
+}
 
-  function updateScore(s) {
-    if (s < score) {
-      s = s + 1;
-      $('#score-match span').text(s);
-      var t = window.setTimeout(() => {
-        updateScore(s)
-      }, 10);
+function printBoard() {
+  for (var i = 0; i < boardSize; i++) {
+    var s = '';
+    for (var j = 0; j < boardSize; j++) {
+      s = s + board[i][j] + ' ';
     }
+    console.log(s);
   }
+}
 
-  function printBoard() {
-    for (var i = 0; i < boardSize; i++) {
-      var s = '';
-      for (var j = 0; j < boardSize; j++) {
-        s = s + board[i][j] + ' ';
-      }
-      console.log(s);
-    }
+var tDamage;
+
+function timeDamage() {
+  var hpWidth = ($('#remaining-hp').width() / $('#hp').width()) * 100 - 1;
+  $('#remaining-hp').width(hpWidth + '%');
+
+  if (hpWidth < 0) {
+    gameOver();
+  } else {
+    tDamage = window.setTimeout(timeDamage, 500);
   }
+}
 
-  var tDamage;
+function gameOver() {
+  $('#game-over').fadeIn(200).click(function () {
+    $('#board-match > div .tile').remove();
+    $('#remaining-hp').width('100%');
+    $('#game-over').fadeOut(500);
+    var t = window.setTimeout(initBoard, 500);
+  });
+}
 
-  function timeDamage() {
-    var hpWidth = ($('#remaining-hp').width() / $('#hp').width()) * 100 - 1;
-    $('#remaining-hp').width(hpWidth + '%');
+if (!matchExitClicked) {
+  initBoard();
+}
 
-    if (hpWidth < 0) {
-      gameOver();
-    }
-    else {
-      tDamage = window.setTimeout(timeDamage, 500);
-    }
-  }
-
-  function gameOver() {
-    $('#game-over').fadeIn(200).click(function () {
-      $('#board-match > div .tile').remove();
-      $('#remaining-hp').width('100%');
-      $('#game-over').fadeOut(500);
-      var t = window.setTimeout(initBoard, 500);
-    });
-  }
-  if (!matchExitClicked) {
-    initBoard();
-  }
 }

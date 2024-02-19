@@ -16,6 +16,12 @@
   font-weight: 700;
   font-style: normal;
 }
+@font-face{
+  font-family: "TT";
+  src: url("./assets/brand/fonts/TTRuns.ttf") format('ttf'), url("./assets/brand/fonts/TTRuns.woff") format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
 
 *, *::after, *::before {
   margin: 0;
@@ -28,7 +34,7 @@ body {
   width: 100%;
   height: 100%;
   background-color: #FFF;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 button {
@@ -48,6 +54,200 @@ a,a:hover{
 }
 
 /* ================================= BRAND GAMES STYLES ========================== */
+
+.brand-pers {
+  font-family: "TT";
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-100%);
+  background-color: #7A8EFE;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0 24px;
+  width: 100%;
+  min-height: 100vh;
+  font-weight: 400;
+  transition: visibility .25s, transform .25s linear;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.brand-pers_active {
+  pointer-events: all;
+  visibility: visible;
+  transform: translateX(0);
+}
+.brand-pers__logo {
+  margin-top: 24px;
+  width: 141px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  margin-bottom: 74px;
+}
+.brand-pers__text {
+  font-family: "TT";
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 33px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: #FFF;
+  margin-bottom: 27px;
+}
+.brand-pers__buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 23px;
+  width: 100%;
+}
+.brand-pers__button {
+  width: 100%;
+  font-family: "Onest";
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 19px;
+  letter-spacing: 0em;
+  text-align: center;
+  padding: 21px 7px;
+  width: 100%;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  border-radius: 65px;
+  transition: opacity .24s linear;
+}
+.brand-pers__button:hover {
+  opacity: .7;
+  cursor: pointer;
+}
+.brand-pers__button_random {
+  background-color: #FFFFFF1A;
+  color: #FFF;
+}
+.brand-pers__button_next {
+  color: #7A8EFE;
+  background-color: #FFF;
+}
+.swiper__text {
+  font-family: "Onest";
+  color: #FFF;
+  font-size: 23px;
+  font-weight: 400;
+  line-height: 29px;
+  letter-spacing: 0.699999988079071px;
+  display: block;
+}
+.brand-pers__swiper_left {
+  text-align: right;
+}
+.brand-pers__swipers {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  margin-bottom: 65px;
+  position: relative;
+}
+.swiper-left, .swiper-right {
+  height: 100%;
+}
+.brand-pers__swiper {
+  height: 174px;
+}
+.brand-pers__help-bg {
+  position: absolute;
+  top: 47.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 350px;
+  background-color: #7186F8;
+  border-radius: 9px;
+  height: 34px;
+}
+
+.brand-welcome {
+  font-family: "TT";
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(100%);
+  background-color: #7A8EFE;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0 24px;
+  width: 100%;
+  min-height: 100vh;
+  font-weight: 400;
+  transition: visibility .25s, transform .25s linear;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.brand-welcome__logo {
+  margin-top: 24px;
+  width: 141px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  margin-bottom: 38px;
+}
+.brand-welcome__main-img {
+  width: 100%;
+  margin-bottom: 45px;
+  margin-top: auto;
+}
+.brand-welcome__title {
+  color: #FFF;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 33px;
+  letter-spacing: 0em;
+  text-align: center;
+  margin-bottom: 15px;
+}
+.brand-welcome__subtitle {
+  font-family: "Onest";
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 19px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: #FFF;
+  margin-bottom: 15px;
+}
+.brand-welcome__button {
+  font-family: "Onest";
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 19px;
+  letter-spacing: 0em;
+  text-align: center;
+  outline: none;
+  border: none;
+  color: #7A8EFE;
+  padding: 21px 7px;
+  width: 100%;
+  border-radius: 65px;
+  margin-top: auto;
+  margin-bottom: 39px;
+  opacity: 1;
+  transition: opacity .24s linear;
+}
+.brand-welcome__button:hover {
+  opacity: .7;
+  cursor: pointer;
+}
+
+.brand-welcome_active {
+  pointer-events: all;
+  visibility: visible;
+  transform: translateX(0);
+}
 
 .brand {
   position: relative;
