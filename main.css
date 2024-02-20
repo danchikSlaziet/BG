@@ -3097,3 +3097,328 @@ background-color: #555;
   height: 100vh;
 	position:absolute; top:0; left:0; z-index:999; display:none;
 }
+
+/* ================= MEMORY CARD ============= */
+
+.memory-card {
+  background: #ffffff url('./assets/memory/geometry2.png');
+  font-family: 'Coda', cursive;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;                                         
+  pointer-events: none;
+  font-weight: 400;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: visibility .25s, transform .25s linear, opacity .4s ease-in-out;
+}
+
+.memory-card_active {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: all;
+}
+
+.memory-card .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* font-family: 'Berkshire Swash', cursive, 'Open Sans', sans-serif; */
+}
+
+.memory-card h1 {
+  /* font-family: 'Berkshire Swash', cursive, 'Open Sans', sans-serif; */
+  font-family: 'Open Sans', sans-serif;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 10vw;
+}
+/*Styles for the deck of cards*/
+
+.memory-card .deck {
+  width: 95%;
+  background: linear-gradient(160deg, #02ccba 0%, #aa7ecd 100%);
+  padding: 0.5rem;
+  border-radius: 10px;
+  box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  margin: 0 0 3em;
+}
+
+.memory-card .deck .card {
+  height: 20vw;
+  width: 20vw;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  margin-left: 1vw;
+  margin-right: 1vw;
+  background: #2e3d49;
+  font-size: 0;
+  color: #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
+}
+
+.memory-card .deck .card.open {
+  transform: rotateY(0);
+  background: #02b3e4;
+  cursor: default;
+}
+
+.memory-card .deck .card.show {
+  font-size: 33px;
+}
+
+.memory-card .deck .card.match {
+  cursor: default;
+  background: #02ccba;
+  font-size: 33px;
+  animation-timing-function: ease-in;
+  animation: bounce .3s;
+  -webkit-animation: bounce .3s;
+}
+
+.memory-card .deck .card.unmatched {
+  cursor: default;
+  background: #ff3232;
+  animation-delay: .3s;
+  -webkit-keyframes: shake 0.3s ease-in-out;
+  animation: shake 0.3s ease-in-out;
+}
+
+.memory-card .deck .card.disabled {
+  pointer-events: none;
+}
+/*Styles for the Score Panel*/
+
+.memory-card .score-panel {
+  text-align: left;
+  margin-bottom: 10px;
+  font-size: 5vw;
+}
+
+.memory-card .score-panel .stars {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  margin: 0 5px 0 0;
+}
+
+.memory-card .score-panel .stars li {
+  list-style: none;
+  display: inline-block;
+  color: #ffd700;
+}
+
+.memory-card .score-panel .restart {
+  float: right;
+  cursor: pointer;
+}
+/* --------------------------- */
+.memory-card .gameTimer {
+  display: inline-block;
+  margin: 0 1rem;
+}
+/*model upon completion of the game*/
+
+.memory-card .model {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  transition: visibility .24s, opacity .24s linear;
+  visibility: hidden;
+  opacity: 0;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 6vw;
+  box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(30deg, #3e3ee0 0%, #8ffcf7 100%);
+}
+
+.memory-card .show {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.memory-card .model h2 {
+  font-size: 10vw;
+  margin-top: 1px;
+  margin-bottom: 40px;
+  margin-left: 15px;
+  margin-right: 15px;
+  justify-content: center;
+}
+
+.memory-card .model h3 {
+  font-size: 7vw;
+  margin-left: 15px;
+  margin-top: 1px;
+  margin-bottom: 40px;
+  justify-content: center;
+}
+
+.memory-card .rating li {
+  display: inline-block;
+  color: #ffd700;
+  font-size: 7vw;
+}
+
+.memory-card .replay {
+  background-color: #add8e6;
+  font-family: 'Open Sans', sans-serif;
+  width: 40%;
+  margin-left: 30%;
+  margin-right: 30%;
+  font-size: 5vw;
+  margin-top: 5%;
+  margin-bottom: 10px;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.memory-card .exit {
+  background-color: #add8e6;
+  font-family: 'Open Sans', sans-serif;
+  width: 40%;
+  margin-left: 30%;
+  margin-right: 30%;
+  font-size: 5vw;
+  margin-top: 5%;
+  margin-bottom: 10%;
+  border-radius: 15px;
+  cursor: pointer;  
+}
+/*keyframes*/
+
+@keyframes bounce {
+  0% {
+      transform: translateY(0px);
+  }
+  50% {
+      transform: translateY(-10px);
+  }
+  100% {
+      transform: translateY(0px);
+  }
+}
+
+@-webkit-keyframes bounce {
+  0% {
+      transform: translateY(0px);
+  }
+  50% {
+      transform: translateY(-10px);
+  }
+  100% {
+      transform: translateY(0px);
+  }
+}
+
+@-webkit-keyframes shake {
+  0% {
+      -webkit-transform: translateX(0);
+  }
+  20% {
+      -webkit-transform: translateX(-10px);
+  }
+  40% {
+      -webkit-transform: translateX(10px);
+  }
+  60% {
+      -webkit-transform: translateX(-10px);
+  }
+  80% {
+      -webkit-transform: translateX(10px);
+  }
+  100% {
+      -webkit-transform: translateX(0);
+  }
+}
+
+@keyframes shake {
+  0% {
+      transform: translateX(0);
+  }
+  20% {
+      transform: translateX(-10px);
+  }
+  40% {
+      transform: translateX(10px);
+  }
+  60% {
+      transform: translateX(-10px);
+  }
+  80% {
+      transform: translateX(10px);
+  }
+  100% {
+      transform: translateX(0);
+  }
+}
+/* media query*/
+
+@media screen and (min-width: 601px) {
+  .memory-card h1 {
+      font-size: 5vw;
+  }
+  .memory-card .deck {
+      width: 660px;
+      min-height: 680px;
+      padding: 32px;
+  }
+  .memory-card .deck .card {
+      height: 125px;
+      width: 125px;
+      margin: 0;
+  }
+  .memory-card .score-panel {
+      font-size: 2rem;
+  }
+  .memory-card .model {
+      font-size: 2rem;
+  }
+  .memory-card .model h2 {
+      padding-top: 20vh;
+      font-size: 4vw;
+  }
+  .memory-card .model h3 {
+      font-size: 2rem;
+  }
+  .memory-card .rating li {
+      font-size: 2rem;
+  }
+  .memory-card .replay {
+      font-size: 4vw;
+      max-width: 30%;
+      margin-left: 30%;
+      margin-right: 30%;
+  }
+  .memory-card .exit {
+      font-size: 4vw;
+      max-width: 30%;
+      margin-left: 30%;
+      margin-right: 30%;
+  }
+}
