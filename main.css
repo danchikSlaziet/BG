@@ -3422,3 +3422,31 @@ background-color: #555;
       margin-right: 30%;
   }
 }
+
+/* ===================== 2048 ================= */
+.twenty {
+  background: #faf8ef;
+  color: #776e65;
+  font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+  font-size: 18px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;                                         
+  pointer-events: none;
+  font-weight: 400;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: visibility .25s, transform .25s linear, opacity .4s ease-in-out;
+}
+.twenty_active {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: all;
+}

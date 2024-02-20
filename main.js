@@ -16,6 +16,7 @@ let isBirdGameOver = false;
 let resetBirdGame;
 let startBirdGame;
 let restartBirdGame;
+let isMemoryStarted = false;
 
 let ninjaExitClicked = false;
 let roadExitClicked = false;
@@ -119,6 +120,9 @@ const brandPersNext = brandPers.querySelector('.brand-pers__button_next');
 const ratingPage = document.querySelector('.rating-page');
 const ratingPageBack = ratingPage.querySelector('.rating-page__back');
 const memoryPage = document.querySelector('.memory-card');
+const memoryExit = memoryPage.querySelector('.exit');
+const twentyPage = document.querySelector('.twenty');
+const twentyPageExit = twentyPage.querySelector('.exit-button');
 
 function vibro() {
   let detect = new MobileDetect(window.navigator.userAgent);
@@ -271,11 +275,17 @@ secondBrandPlay.addEventListener('click', () => {
   if (secondBrandTitle.textContent.trim() === 'Карточки') {
     secondBrandPage.classList.remove('brand-second_active');
     memoryPage.classList.add('memory-card_active');
-    let start =  startMemory();
-    start();
+    if (!isMemoryStarted) {
+      let start =  startMemory();
+      start();
+    }
+    isMemoryStarted = true;
+  }
+  if (secondBrandTitle.textContent.trim() === '2048') {
+    secondBrandPage.classList.remove('brand-second_active');
+    twentyPage.classList.add('twenty_active');
   }
 });
-
 document.querySelector('.rating-button').addEventListener('click', () => {
   ratingPage.classList.add('rating-page_active');
   firstBrandPage.classList.remove('brand-first_active');
@@ -285,6 +295,18 @@ ratingPageBack.addEventListener('click', () => {
   ratingPage.classList.remove('rating-page_active');
   firstBrandPage.classList.add('brand-first_active');
 })
+
+twentyPageExit.addEventListener('click', () => {
+  twentyPage.classList.remove('twenty_active');
+  secondBrandPage.classList.add('brand-second_active');
+  initSwipers();
+})
+
+memoryExit.addEventListener('click', () => {
+  memoryPage.classList.remove('memory-card_active');
+  secondBrandPage.classList.add('brand-second_active');
+  initSwipers();
+});
 
 brandWelcomeBtn.addEventListener('click', () => {
   brandWelcome.classList.remove('brand-welcome_active');

@@ -2,13 +2,15 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
+  <meta name="HandheldFriendly" content="True">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <script src="./vendor/tower/three.js"></script>
   <link rel="stylesheet" href="./normalize.css">
   <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-    <link rel="stylesheet prefetch" href="https://fonts.googleapis.com/css?family=Coda">
+  <link rel="stylesheet prefetch" href="https://fonts.googleapis.com/css?family=Coda">
   <link rel="stylesheet" href="./vendor/swiper/swiper.css">
   <link rel="stylesheet" href="./main.css">
+  <link href="./assets/2048/style/main.css" rel="stylesheet" type="text/css">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <title>Brand Games</title>
 </head>
@@ -301,6 +303,19 @@
               <img class="brand-first__game-img" src="./assets/brand/images/game-img.png" alt="">
               <h2 class="brand-first__game-title">
                 Карточки
+              </h2>
+              <p class="brand-first__game-subtitle">
+                Классический раннер со сбором предметов
+              </p>
+            </div>
+            <p class="brand-first__game-play">Играть</p>
+          </div>
+          <div class="brand-first__game-full">
+            <div class="brand-first__game">
+              <!-- <img class="brand-first__game-new" src="./assets/brand/images/game-new.svg" alt=""> -->
+              <img class="brand-first__game-img" src="./assets/brand/images/game-img.png" alt="">
+              <h2 class="brand-first__game-title">
+                2048
               </h2>
               <p class="brand-first__game-subtitle">
                 Классический раннер со сбором предметов
@@ -946,9 +961,72 @@
     
       </div>
     </div>
+    <div class="twenty">
+      <div class="container">
+        <div class="heading">
+          <div class="scores-container">
+            <div class="score-container">0</div>
+            <div class="best-container">0</div>
+          </div>
+        </div>
+        <div class="game-container">
+          <div class="game-message">
+            <p></p>
+            <div class="lower">
+              <a class="keep-playing-button">Keep going</a>
+              <a class="retry-button">Try again</a>
+            </div>
+          </div>
+    
+          <div class="grid-container">
+            <div class="grid-row">
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+            </div>
+            <div class="grid-row">
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+            </div>
+            <div class="grid-row">
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+            </div>
+            <div class="grid-row">
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+            </div>
+          </div>
+          <div class="tile-container">
+    
+          </div>
+        </div>
+        <a class="exit-button">Exit</a>
+        <a class="restart-button">New Game</a>
+      </div>
+    </div>
   </div>
   <script src="//cdn.jsdelivr.net/npm/eruda"></script>
   <script>eruda.init();</script>
+  <!------- 2048 scripts --------->
+  <script src="./assets/2048/js/bind_polyfill.js"></script>
+  <script src="./assets/2048/js/classlist_polyfill.js"></script>
+  <script src="./assets/2048/js/animframe_polyfill.js"></script>
+  <script src="./assets/2048/js/keyboard_input_manager.js"></script>
+  <script src="./assets/2048/js/html_actuator.js"></script>
+  <script src="./assets/2048/js/grid.js"></script>
+  <script src="./assets/2048/js/tile.js"></script>
+  <script src="./assets/2048/js/local_storage_manager.js"></script>
+  <script src="./assets/2048/js/game_manager.js"></script>
+  <script src="./assets/2048/js/application.js"></script>
+  <!------------------------------>
   <script src="./vendor/tower/cannon.js"></script>
   <script src="./vendor/snake/jquery.min.js"></script>
   <script src="./vendor/snake/mobile-detect.min.js"></script>
