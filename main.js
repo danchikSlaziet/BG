@@ -288,6 +288,9 @@ secondBrandPlay.addEventListener('click', () => {
   if (secondBrandTitle.textContent.trim() === 'Здание') {
     window.location.href = "./assets/building/index.html";
   }
+  if (secondBrandTitle.textContent.trim() === 'Букины') {
+    window.location.href = "./assets/gena/index.html";
+  }
 });
 document.querySelector('.rating-button').addEventListener('click', () => {
   ratingPage.classList.add('rating-page_active');
