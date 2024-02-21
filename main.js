@@ -285,6 +285,9 @@ secondBrandPlay.addEventListener('click', () => {
     secondBrandPage.classList.remove('brand-second_active');
     twentyPage.classList.add('twenty_active');
   }
+  if (secondBrandTitle.textContent.trim() === 'Здание') {
+    window.location.href = "./assets/building/index.html";
+  }
 });
 document.querySelector('.rating-button').addEventListener('click', () => {
   ratingPage.classList.add('rating-page_active');
