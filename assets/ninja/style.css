@@ -1,0 +1,427 @@
+@font-face{
+  font-family: "TT";
+  src: url("./fonts/TTRuns.ttf") format('ttf'), url("./fonts/TTRuns.woff") format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face{
+  font-family: "TT";
+  src: url("./fonts/TTRuns-Regular.ttf") format('ttf'), url("./fonts/TTRuns-Regular.woff") format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+* {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "TT", Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+#score {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  font-size: 2em;
+  font-weight: 900;
+}
+
+#introduction {
+  width: 200px;
+  height: 150px;
+  position: absolute;
+  font-weight: 600;
+  font-size: 0.8em;
+  font-family: "TT", Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+  transition: opacity 2s;
+}
+
+#perfect {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 2s;
+}
+
+#youtube,
+#youtube-card {
+  display: none;
+}
+
+@media (min-height: 425px) {
+  /** Youtube logo by https://codepen.io/alvaromontoro */
+  #youtube {
+    z-index: 2;
+    display: block;
+    width: 100px;
+    height: 70px;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: red;
+    border-radius: 50% / 11%;
+    transform: scale(0.8);
+    transition: transform 0.5s;
+  }
+
+  #youtube:hover,
+  #youtube:focus {
+    transform: scale(0.9);
+  }
+
+  #youtube::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 7.5%;
+    left: -6%;
+    width: 112%;
+    height: 85%;
+    background: red;
+    border-radius: 9% / 50%;
+  }
+
+  #youtube::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    width: 45px;
+    height: 30px;
+    border: 15px solid transparent;
+    box-sizing: border-box;
+    border-left: 30px solid white;
+  }
+
+  #youtube span {
+    font-size: 0;
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  #youtube:hover + #youtube-card {
+    display: block;
+    position: absolute;
+    bottom: 12px;
+    left: 10px;
+    padding: 25px 25px 25px 130px;
+    width: 300px;
+    background-color: white;
+  }
+}
+
+.bg-score {
+  position: absolute;
+  top: 31px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 14px 19px;
+  background-color: #FFF;
+  border-radius: 12px;
+  border: 1px solid #FFFFFF21;
+}
+.bg-score__count {
+  color: #000;
+  font-family: "TT";
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 22px;
+  letter-spacing: 0em;
+  text-align: right;
+  margin: 0;
+}
+.bg-score__coin {
+  width: 19px;
+}
+
+.restart-button {
+  position: absolute;
+  top: 31px;
+  right: 21px;
+  z-index: 5;
+}
+.restart-button:hover {
+  cursor: pointer;
+}
+
+.exit-button {
+  position: absolute;
+  top: 10px;
+  left: 5px;
+  z-index: 10;
+}
+.exit-button:hover {
+  cursor: pointer;
+}
+.first-page {
+  background-color: #FFFFFF;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9;
+  padding: 0 17px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-100%);
+  transition: visibility .24s, opacity .24s linear, transform .24s linear;
+}
+.first-page_active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+.first-page:hover {
+  cursor: initial;
+}
+.first-page__velo-img {
+  position: absolute;
+  top: 117px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 320px;
+  z-index: 2;
+}
+.first-page__help-img {
+  position: absolute;
+  top: 56px;
+  left: 0;
+  width: 100%;
+}
+.first-page__title {
+  margin-top: 375px;
+  position: relative;
+  z-index: 100;
+  color: #000000;
+  font-family: "TT";
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 23px;
+  letter-spacing: 0em;
+  text-align: center;
+  margin-bottom: 24px;
+}
+@media screen and (min-height: 670px) {
+  .first-page__title {
+    margin-top: 400px;
+  }
+}
+@media screen and (min-height: 735px) {
+  .first-page__title {
+    margin-top: 450px;
+  }
+}
+@media screen and (min-height: 850px) {
+  .first-page__title {
+    margin-top: 500px;
+  }
+}
+.first-page__text {
+  position: relative;
+  z-index: 100;
+  color: #000000;
+  font-family: "TT";
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0em;
+  text-align: center;
+}
+.first-page__button {
+  margin-top: auto;
+  transition: opacity .24s linear;
+  color: #000000;
+  font-family: 'TT';
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 15px;
+  letter-spacing: 0em;
+  text-align: center;
+  border: 1px solid #FFFFFF21;
+  background-color: #FFD600;
+  width: 100%;
+  padding: 17px 5px;
+  border-radius: 18px;
+  margin-bottom: 36px;
+}
+.first-page__button:hover {
+  cursor: pointer;
+  opacity: .7;
+}
+
+.loose-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,.5);
+  visibility: hidden;
+  opacity: 0;
+  z-index: 10;
+  transition: visibility .24s, opacity .24s linear;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loose-page_active {
+  visibility: visible;
+  opacity: 1;
+}
+.loose-page__content {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+}
+.loose-page__img {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  z-index: 10;
+}
+@media screen and (max-height: 640px) {
+  .loose-page__img {
+    top: -40px;
+  }
+}
+@media screen and (max-height: 600px) {
+  .loose-page__img {
+    top: -100px;
+  }
+}
+.loose-page__info {
+  background: linear-gradient(180deg, #7199FF 0%, #000D2E 100%);
+  border: 1px solid #FFFFFF24;
+  border-radius: 25px;
+  padding: 100px 16px 22px 16px;
+}
+.loose-page__info-text {
+  color: #FFF;
+  margin: 0;
+  margin-bottom: 17px;
+  font-family: "TT";
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 23px;
+  letter-spacing: 0em;
+  text-align: center;
+}
+.loose-page__info-stats {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 9px;
+  margin-bottom: 17px;
+}
+.loose-page__info-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  border: 1px solid #FFFFFF1C;
+  background: #FFFFFF24;
+  border-radius: 25px;
+  gap: 10px;
+  width: 100%;
+}
+.loose-page__info-stat-text {
+  color: #FFFFFF99;
+  font-family: "TT";
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0em;
+  text-align: center;
+  margin: 0;
+}
+.loose-page__info-stat-count {
+  color: #FFF;
+  margin: 0;
+  font-family: "TT";
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 32px;
+  letter-spacing: 0em;
+  text-align: center;
+}
+.loose-page__info-stat-count_best {
+}
+.loose-page__info-button {
+  margin: 0 auto;
+  display: block;
+  border: none;
+  outline: none;
+  color: #FFF;
+  font-family: "TT";
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0em;
+  text-align: center;
+  padding: 17px 5px;
+  background: #FFFFFF33;
+  border: 1px solid #FFFFFF21;
+  border-radius: 18px;
+  width: 100%;
+  transition: opacity .3s linear;
+}
+.loose-page__info-button:hover {
+  cursor: pointer;
+  opacity: .75;
+}
+.loose-page__exit {
+  position: absolute;
+  bottom: 19px;
+  left: 50%;
+  transform: translateX(-50%);
+  outline: none;
+  border: none;
+  color: #FFF;
+  font-family: "TT";
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0em;
+  text-align: center;
+  padding: 13px 5px;
+  border: 1px solid #FFFFFF6E;
+  background: #FFFFFF4A;
+  border-radius: 25px;
+  min-width: 185px;
+}
+.loose-page__exit:hover {
+  cursor: pointer;
+}

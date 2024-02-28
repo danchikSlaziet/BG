@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <img onclick="window.location.href='../../index.html'" class="exit-button" src="./images/exit-img.svg" alt="">
+  <img class="restart-button" src="./images/restart-img.svg" alt="">
+  <div class="bg-score">
+    <p class="bg-score__count">4567</p>
+    <img class="bg-score__coin" src="./images/coin-img.svg" alt="">
+  </div>
+  <div class="first-page first-page_active">
+    <img class="first-page__velo-img" src="./images/first-page-img.svg" alt="">
+    <img class="first-page__help-img" src="./images/first-page-help.svg" alt="">
+    <h1 class="first-page__title">
+      Мост разрушен!<br>Но заказы никто не отменял
+    </h1>
+    <p class="first-page__text">
+      Помоги курьеру доставить заказ вовремя, достраивая недостающие части моста
+    </p>
+    <button class="first-page__button" type="button">
+      Отправиться в путь
+    </button>
+  </div>
+  <div class="loose-page">
+    <img class="loose-page__img" src="./images/loose-img.svg" alt="">
+    <div class="loose-page__content">
+      <div class="loose-page__info">
+        <p class="loose-page__info-text">
+          Заказ не доставлен
+        </p>
+        <div class="loose-page__info-stats">
+          <div class="loose-page__info-stat">
+            <p class="loose-page__info-stat-text">
+              Счет
+            </p>
+            <p class="loose-page__info-stat-count">
+              
+            </p>
+          </div>
+          <div class="loose-page__info-stat">
+            <p class="loose-page__info-stat-text">
+              Лучший&nbsp;счет
+            </p>
+            <p class="loose-page__info-stat-count loose-page__info-stat-count_best">
+              824
+            </p>
+          </div>
+        </div>
+        <button id="restart" class="loose-page__info-button" type="button">Заново</button>
+      </div>
+    </div>
+    <button onclick="window.location.href='../../index.html'" class="loose-page__exit" type="button">Выйти из игры</button>
+  </div>
+  <div class="container">
+    <canvas id="game" width="375" height="375"></canvas>
+    <div id="perfect">Двойной счёт</div>
+  </div>
+  <script src="./main.js"></script>
+</body>
+</html>
