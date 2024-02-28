@@ -274,6 +274,7 @@ function animate(timestamp) {
       break;
     }
     case "walking": {
+      updateBackgroundPosition(-1);
       heroX += (timestamp - lastTimestamp) / walkingSpeed;
 
       const [nextPlatform] = thePlatformTheStickHits();
@@ -364,9 +365,6 @@ function thePlatformTheStickHits() {
 function draw() {
   ctx.save();
   ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-  drawBackground();
-
   // Center main canvas area to the middle of the screen
   ctx.translate(
     (window.innerWidth - canvasWidth) / 2 - sceneOffset,
@@ -395,14 +393,6 @@ otherRestartButton.addEventListener("click", function (event) {
 
 function drawPlatforms() {
   platforms.forEach(({ x, w }) => {
-    // Draw platform
-    // ctx.fillStyle = "black";
-    // ctx.fillRect(
-    //   x,
-    //   canvasHeight - platformHeight,
-    //   w,
-    //   platformHeight + (window.innerHeight - canvasHeight) / 2
-    // );
     ctx.drawImage(
       platformImg,
       x,
@@ -430,47 +420,7 @@ function drawHero() {
     heroX - heroWidth / 2,
     heroY + canvasHeight - platformHeight - heroHeight / 2
   );
-
   ctx.drawImage(heroImg, -heroWidth / 2, -heroHeight / 2, 30, 30);
-
-  // // Body
-  // drawRoundedRect(
-    // -heroWidth / 2,
-    // -heroHeight / 2,
-    // heroWidth,
-    // heroHeight - 4,
-  //   5
-  // );
-
-  // // Legs
-  // const legDistance = 5;
-  // ctx.beginPath();
-  // ctx.arc(legDistance, 11.5, 3, 0, Math.PI * 2, false);
-  // ctx.fill();
-  // ctx.beginPath();
-  // ctx.arc(-legDistance, 11.5, 3, 0, Math.PI * 2, false);
-  // ctx.fill();
-
-  // // Eye
-  // ctx.beginPath();
-  // ctx.fillStyle = "white";
-  // ctx.arc(5, -7, 3, 0, Math.PI * 2, false);
-  // ctx.fill();
-
-  // // Band
-  // ctx.fillStyle = "red";
-  // ctx.fillRect(-heroWidth / 2 - 1, -12, heroWidth + 2, 4.5);
-  // ctx.beginPath();
-  // ctx.moveTo(-9, -14.5);
-  // ctx.lineTo(-17, -18.5);
-  // ctx.lineTo(-14, -8.5);
-  // ctx.fill();
-  // ctx.beginPath();
-  // ctx.moveTo(-10, -10.5);
-  // ctx.lineTo(-15, -3.5);
-  // ctx.lineTo(-5, -7);
-  // ctx.fill();
-
   ctx.restore();
 }
 
@@ -509,77 +459,24 @@ function drawSticks() {
   });
 }
 
-function drawBackground() {
-  // Draw sky
-  var gradient = ctx.createLinearGradient(0, 0, 0, window.innerHeight);
-  gradient.addColorStop(0, "#BBD691");
-  gradient.addColorStop(1, "#FEF1E1");
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+let backgroundOffset = 0;
+const backgroundSpeed = 1; // Скорость движения фона
+const screenWidth = window.innerWidth;
+const backgroundElement = document.querySelector('.background');
 
-  // Draw hills
-  drawHill(hill1BaseHeight, hill1Amplitude, hill1Stretch, "#95C629");
-  drawHill(hill2BaseHeight, hill2Amplitude, hill2Stretch, "#659F1C");
+// Функция для обновления позиции фонового изображения
+function updateBackgroundPosition(offsetX) {
+  console.log('update bg')
+    // Обновляем позицию фона на основе переданного смещения
+    backgroundOffset += offsetX * backgroundSpeed;
 
-  // Draw trees
-  trees.forEach((tree) => drawTree(tree.x, tree.color));
-}
+    // Если фон сдвинулся за пределы экрана, возвращаем его обратно
+    if (backgroundOffset >= backgroundElement.width) {
+        backgroundOffset = 0;
+    } else if (backgroundOffset <= -backgroundElement.width) {
+        backgroundOffset = 0;
+    }
 
-// A hill is a shape under a stretched out sinus wave
-function drawHill(baseHeight, amplitude, stretch, color) {
-  ctx.beginPath();
-  ctx.moveTo(0, window.innerHeight);
-  ctx.lineTo(0, getHillY(0, baseHeight, amplitude, stretch));
-  for (let i = 0; i < window.innerWidth; i++) {
-    ctx.lineTo(i, getHillY(i, baseHeight, amplitude, stretch));
-  }
-  ctx.lineTo(window.innerWidth, window.innerHeight);
-  ctx.fillStyle = color;
-  ctx.fill();
-}
-
-function drawTree(x, color) {
-  ctx.save();
-  ctx.translate(
-    (-sceneOffset * backgroundSpeedMultiplier + x) * hill1Stretch,
-    getTreeY(x, hill1BaseHeight, hill1Amplitude)
-  );
-
-  const treeTrunkHeight = 5;
-  const treeTrunkWidth = 2;
-  const treeCrownHeight = 25;
-  const treeCrownWidth = 10;
-
-  // Draw trunk
-  ctx.fillStyle = "#7D833C";
-  ctx.fillRect(
-    -treeTrunkWidth / 2,
-    -treeTrunkHeight,
-    treeTrunkWidth,
-    treeTrunkHeight
-  );
-
-  // Draw crown
-  ctx.beginPath();
-  ctx.moveTo(-treeCrownWidth / 2, -treeTrunkHeight);
-  ctx.lineTo(0, -(treeTrunkHeight + treeCrownHeight));
-  ctx.lineTo(treeCrownWidth / 2, -treeTrunkHeight);
-  ctx.fillStyle = color;
-  ctx.fill();
-
-  ctx.restore();
-}
-
-function getHillY(windowX, baseHeight, amplitude, stretch) {
-  const sineBaseY = window.innerHeight - baseHeight;
-  return (
-    Math.sinus((sceneOffset * backgroundSpeedMultiplier + windowX) * stretch) *
-      amplitude +
-    sineBaseY
-  );
-}
-
-function getTreeY(x, baseHeight, amplitude) {
-  const sineBaseY = window.innerHeight - baseHeight;
-  return Math.sinus(x) * amplitude + sineBaseY;
+    // Обновляем стиль изображения с учетом его новой позиции
+    backgroundElement.style.transform = `translateX(${backgroundOffset}px)`;
 }
