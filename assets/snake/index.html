@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="style.css">
+  <title>Snake</title>
+</head>
+<body>
+  <div class="container noselect">
+    <img class="exit-button" src="./images/exit-arrow.svg" alt="">
+    <div class="clouds">
+      <img class="clouds__cloud clouds__cloud_top" src="./images/top-oblako.svg" alt="">
+      <img class="clouds__cloud  clouds__cloud_middle" src="./images/middle-oblako.svg" alt="">
+      <img class="clouds__cloud clouds__cloud_bottom" src="./images/bottom-oblako.svg" alt="">
+    </div>
+    <img class="main-moon" src="./images/main-moon.svg" alt="">
+    <div class="first-page first-page_active">
+      <img class="first-page__moon" src="./images/first-page-moon.svg" alt="">
+      <div class="first-page__rocket-help">
+        <img class="first-page__rocket" src="./images/first-page-rocket.svg" alt="">
+        <p class="first-page__title">
+          Капитан,<br>мы в открытом космосе!
+        </p>
+        <p class="first-page__subtitle">
+          Исследуй галактику, собирай кристаллы и&nbsp;избегай инопланетных опасностей!
+        </p>
+        <p class="first-page__help">
+          Для управления кораблем используй стрелки навигации внизу экрана
+        </p>
+        <button class="first-page__button" type="button">
+          Принято!
+        </button>
+      </div>
+    </div>
+    <div class="end-page">
+      <div class="end-page__content">
+        <img class="end-page__img" src="./images/end-page-ship.svg" alt="">
+        <p class="end-page__text">
+          Корабль разрушен
+        </p>
+        <div class="end-page__score-block">
+          <div class="end-page__score">
+            <p class="end-page__score-text">
+              Счёт
+            </p>
+            <p class="end-page__score-count">
+
+            </p>
+          </div>
+          <div class="end-page__score end-page__score_best">
+            <p class="end-page__score-text">
+              Лучший счёт
+            </p>
+            <p class="end-page__score-count end-page__score-count_best">
+              
+            </p>
+          </div>
+        </div>
+        <button class="end-page__button" type="button">Заново</button>
+      </div>
+    </div>
+    <div class="info-page">
+      <div class="info-page__content">
+        <img class="info-page__img" src="./images/info-ufo.svg" alt="">
+        <p class="info-page__text">
+          Ты разбил<br>летающую тарелку
+        </p>
+        <p class="info-page__subtext">
+          Внимание, капитан!
+          Избегай монстров, которых
+          разбросало по&nbsp;всему космосу
+        </p>
+        <button class="info-page__button" type="button">Принято!</button>
+      </div>
+    </div>
+    <div class="info-page-2">
+      <div class="info-page-2__content">
+        <img class="info-page-2__img" src="./images/info-hole.svg" alt="">
+        <p class="info-page-2__text">
+          Всех монстров<br>засосало
+        </p>
+        <p class="info-page-2__subtext">
+          Инопланетных монстров засосало в&nbsp;черную дыру, продолжаем полет!
+        </p>
+        <button class="info-page-2__button" type="button">Принято!</button>
+      </div>
+    </div>
+    <div class="settings-page">
+      <div class="settings-page__close">
+        <img class="settings-page__close-img" src="./images/close.svg" alt="">
+      </div>
+      <div class="settings-page__block">
+        <p>Скорость</p>
+        <div class="select-wrapper">
+          <select class="settings-page__select select" name="speed" id="speed">
+            <option value="low">низкая</option>
+            <option selected value="medium">средняя</option>
+            <option value="high">смерть</option>
+          </select>
+          <div class="select-arrow-1"></div>
+        </div>
+      </div>
+      <div class="settings-page__block">
+        <p>Цвет змейки (hex-формат)</p>
+        <input class="settings-page__color-input" type="text" placeholder="введите hex вместе с #">
+      </div>
+      <button class="settings-page__button" type="button">Подтвердить</button>
+    </div>
+    <div class="wrapper">
+      <div class="wrapper__buttons">
+        <button id="replay">
+          <img src="./images/restart-img.svg" alt="">
+        </button>
+      </div>
+      <div class="bg-score">
+        <p class="bg-score__amount">
+          14761
+        </p>
+        <img class="bg-score__coin" src="./images/bg-score-coin.svg" alt="">
+      </div>
+      <div id="canvas">
+        <div class="canvas-border"></div>
+        <canvas id="snakeCanvas"></canvas>
+        <canvas id="foodCanvas"></canvas>
+        <canvas id="wallCanvas"></canvas>
+      </div>
+      <div id="ui">
+        <h2>
+          СЧЁТ
+        </h2>
+        <span id="score">00</span>
+      </div>
+      <div class="info-pc">
+        <p class="info-pc__text">Для управления кораблем<br>используйте:</p>
+        <img class="info-pc__image" src="./images/controls-pc.png" alt="">
+      </div>
+      <div id="controls">
+        <img class="arrow-btn" id="ArrowLeft" src="./images/arrow-left.svg" alt="">
+        <img class="arrow-btn" id="ArrowRight" src="./images/arrow-right.svg" alt="">
+        <img class="arrow-btn" id="ArrowUp" src="./images/arrow-up.svg" alt="">
+        <img class="arrow-btn" id="ArrowDown" src="./images/arrow-bottom.svg" alt="">
+      </div>
+    </div>
+  </div>
+  <script src="mobile-detect.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
