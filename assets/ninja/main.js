@@ -35,7 +35,7 @@ let trees = [];
 // Todo: Save high score to localStorage (?)
 
 let score = 0;
-let maxScore = window.localStorage.getItem("maxScore") || undefined;
+let maxScore = window.localStorage.getItem("maxScoreNinja") || undefined;
 
 // Configuration
 const canvasWidth = 375;
@@ -312,7 +312,7 @@ function animate(timestamp) {
     case "falling": {
       maxScore ? null : (maxScore = score);
       score > maxScore ? (maxScore = score) : null;
-      window.localStorage.setItem("maxScore", maxScore);
+      window.localStorage.setItem("maxScoreNinja", maxScore);
       loosePage.querySelector('.loose-page__info-stat-count').textContent = score;
       loosePage.querySelector('.loose-page__info-stat-count_best').textContent = maxScore;
       if (sticks.last().rotation < 180)
