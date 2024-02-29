@@ -71,6 +71,8 @@ canvas.height = window.innerHeight;
 const originalWidth = canvas.width;
 const originalHeight = canvas.height;
 
+const container = document.querySelector('.container');
+
 const ctx = canvas.getContext("2d");
 const scaleFactor = 2;
 canvas.width = originalWidth * scaleFactor; // Увеличенная ширина
@@ -91,9 +93,14 @@ const platformImg = new Image();
 platformImg.src = './images/platform.png';
 const heroImg = new Image();
 heroImg.src = './images/hero.svg';
+const conusImg = new Image();
+conusImg.src = './images/conus.svg';
 
 const firstPage = document.querySelector('.first-page');
 const firstPageButton = firstPage.querySelector('.first-page__button');
+
+const conusPage = document.querySelector('.conus-page');
+const conusPageButton = conusPage.querySelector('.conus-page__button');
 
 const loosePage = document.querySelector('.loose-page');
 
@@ -101,6 +108,10 @@ firstPageButton.addEventListener('click', () => {
   firstPage.classList.remove('first-page_active');
   document.querySelector('.exit-button').src = './images/exit-img-other.svg';
   document.querySelector('.exit-button').style = 'top: 31px; left: 21px;'
+});
+
+conusPageButton.addEventListener('click', () => {
+  conusPage.classList.remove('conus-page_active');
 });
 
 // Initialize layout
@@ -199,7 +210,7 @@ setTimeout(() => {
 
 
 window.addEventListener("mousedown", function (event) {
-  if (phase == "waiting" && !firstPage.className.includes('active')) {
+  if (phase == "waiting" && !firstPage.className.includes('active') && !conusPage.className.includes('active')) {
     lastTimestamp = undefined;
     phase = "stretching";
     window.requestAnimationFrame(animate);
@@ -207,20 +218,20 @@ window.addEventListener("mousedown", function (event) {
 });
 
 window.addEventListener("mouseup", function (event) {
-  if (phase == "stretching" && !firstPage.className.includes('active')) {
+  if (phase == "stretching" && !firstPage.className.includes('active') && !conusPage.className.includes('active')) {
     phase = "turning";
   }
 });
 
 window.addEventListener("touchstart", function (event) {
-  if (phase == "waiting" && !firstPage.className.includes('active')) {
+  if (phase == "waiting" && !firstPage.className.includes('active') && !conusPage.className.includes('active')) {
     lastTimestamp = undefined;
     phase = "stretching";
     window.requestAnimationFrame(animate);
   }
 });
 window.addEventListener("touchend", function (event) {
-  if (phase == "stretching" && !firstPage.className.includes('active')) {
+  if (phase == "stretching" && !firstPage.className.includes('active') && !conusPage.className.includes('active')) {
     phase = "turning";
   }
 });
@@ -230,9 +241,13 @@ window.addEventListener("resize", function (event) {
   canvas.height = window.innerHeight;
   draw();
 });
-
+function showConusPage() {
+  if (!localStorage.getItem('perfectHit')) {
+    conusPage.classList.add('conus-page_active');
+  }
+}
 window.requestAnimationFrame(animate);
-
+let isBackgroundMoving = false;
 // The main game loop
 function animate(timestamp) {
   if (!lastTimestamp) {
@@ -260,6 +275,10 @@ function animate(timestamp) {
           score += perfectHit ? 2 : 1;
 
           if (perfectHit) {
+            showConusPage();
+            if (!window.localStorage.getItem('perfectHit')) {
+              window.localStorage.setItem('perfectHit', true);
+            }
             perfectElement.style.opacity = 1;
             setTimeout(() => (perfectElement.style.opacity = 0), 1000);
           }
@@ -274,7 +293,7 @@ function animate(timestamp) {
       break;
     }
     case "walking": {
-      updateBackgroundPosition(-1);
+      updateBackgroundPosition(-3);
       heroX += (timestamp - lastTimestamp) / walkingSpeed;
 
       const [nextPlatform] = thePlatformTheStickHits();
@@ -296,6 +315,7 @@ function animate(timestamp) {
       break;
     }
     case "transitioning": {
+      isStartedBGMove = false;
       sceneOffset += (timestamp - lastTimestamp) / transitioningSpeed;
 
       const [nextPlatform] = thePlatformTheStickHits();
@@ -332,10 +352,8 @@ function animate(timestamp) {
     default:
       throw Error("Wrong phase");
   }
-
   draw();
   window.requestAnimationFrame(animate);
-
   lastTimestamp = timestamp;
 }
 
@@ -402,10 +420,10 @@ function drawPlatforms() {
     );
     // Draw perfect area only if hero did not yet reach the platform
     if (sticks.last().x < x) {
-      ctx.fillStyle = "red";
-      ctx.fillRect(
+      ctx.drawImage(
+        conusImg,
         x + w / 2 - perfectAreaSize / 2,
-        canvasHeight - platformHeight,
+        canvasHeight - platformHeight - 10,
         perfectAreaSize,
         perfectAreaSize
       );
@@ -445,38 +463,27 @@ function drawSticks() {
     // Move the anchor point to the start of the stick and rotate
     ctx.translate(stick.x, canvasHeight - platformHeight - 15);
     ctx.rotate((Math.PI / 180) * stick.rotation);
-
-    // Draw stick
-    // ctx.beginPath();
-    // ctx.lineWidth = 2;
-    // ctx.moveTo(0, 0);
-    // ctx.lineTo(0, -stick.length);
-    // ctx.stroke();
     ctx.drawImage(roadImg, 0, 0, roadImg.width, -stick.length);
 
     // Restore transformations
     ctx.restore();
   });
 }
+const backgroundSpeed = 1;
+const backgroundBlock = document.querySelector('.background-block')
+const backgroundElement1 = backgroundBlock.querySelector('.background');
+let backgroundOffset1 = 0;
 
-let backgroundOffset = 0;
-const backgroundSpeed = 1; // Скорость движения фона
-const screenWidth = window.innerWidth;
-const backgroundElement = document.querySelector('.background');
 
-// Функция для обновления позиции фонового изображения
 function updateBackgroundPosition(offsetX) {
-  console.log('update bg')
-    // Обновляем позицию фона на основе переданного смещения
-    backgroundOffset += offsetX * backgroundSpeed;
-
-    // Если фон сдвинулся за пределы экрана, возвращаем его обратно
-    if (backgroundOffset >= backgroundElement.width) {
-        backgroundOffset = 0;
-    } else if (backgroundOffset <= -backgroundElement.width) {
-        backgroundOffset = 0;
+    // Обновляем позицию обоих фоновых элементов на основе переданного смещения
+    backgroundOffset1 += offsetX * backgroundSpeed;
+    // backgroundOffset2 += offsetX * backgroundSpeed;
+    // Если первый фон сдвинулся за пределы экрана, возвращаем его обратно за вторым фоном
+    if (backgroundOffset1 <= -backgroundElement1.width + window.innerWidth) {
+      backgroundElement1.style = 'transition: none';
+      backgroundOffset1 = 0;
     }
-
-    // Обновляем стиль изображения с учетом его новой позиции
-    backgroundElement.style.transform = `translateX(${backgroundOffset}px)`;
+    // Обновляем стиль изображения обоих фоновых элементов с учетом их новой позиции
+    backgroundElement1.style.transform = `translateX(${backgroundOffset1}px)`;
 }

@@ -144,10 +144,31 @@ body {
   top: 0;
   left: 0;
   height: 100%;
-  background-image: url('./images/bg.svg'); /* Путь к вашему изображению бэкграунда */
-  background-size: cover; /* Растягиваем изображение на всю область */
   z-index: -1;
   transition: transform .3s linear;
+  /* animation: moveBackground 1s linear;
+  animation-fill-mode: forwards;
+  animation-play-state: paused; */
+}
+.background2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: -1;
+  transition: transform .3s linear;
+  /* animation: moveBackground 1s linear;
+  animation-fill-mode: forwards;
+  animation-play-state: paused; */
+}
+
+@keyframes moveBackground {
+  from {
+      transform: translateX(0);
+  }
+  to {
+      transform: translateX(-100px);
+  }
 }
 
 .bg-score {
@@ -296,6 +317,83 @@ body {
 .first-page__button:hover {
   cursor: pointer;
   opacity: .7;
+}
+.conus-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,.5);
+  visibility: hidden;
+  opacity: 0;
+  z-index: 10;
+  transition: visibility .24s, opacity .24s linear;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.conus-page_active {
+  visibility: visible;
+  opacity: 1;
+}
+.conus-page__content {
+  position: relative;
+  background-color: #FFF;
+  border-radius: 25px;
+  border: 1px solid #FFFFFF24;
+  padding: 128px 13px 22px 13px;
+  width: 280px;
+  box-sizing: border-box;
+}
+.conus-page__img {
+  position: absolute;
+  width: 148px;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -80px;
+}
+.conus-page__title {
+  margin: 0;
+  margin-bottom: 4px;
+  color: #000;
+  font-family: "TT";
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 23px;
+  letter-spacing: 0em;
+  text-align: center;
+}
+.conus-page__subtext {
+  margin: 0;
+  margin-bottom: 21px;
+  color: #000;
+  font-family: "TT";
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0em;
+  text-align: center;
+}
+.conus-page__button {
+  margin: 0 auto;
+  display: block;
+  color: #000;
+  font-family: "TT";
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0em;
+  text-align: center;
+  width: 100%;
+  padding: 18px 5px;
+  border-radius: 18px;
+  background-color: #FFD600;
+  border: none;
+  outline: none;
+}
+.conus-page__button:hover {
+  cursor: pointer;
 }
 
 .loose-page {
