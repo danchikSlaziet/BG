@@ -784,6 +784,11 @@ border-top: 14px solid #6e7888;
   background-position: center center;
   padding: 0 22px;
 }
+@media screen and (max-height: 620px) {
+  .first-page__rocket-help {
+    height: 720px;
+  }
+}
 .first-page__moon {
   position: absolute;
   top: 0;
