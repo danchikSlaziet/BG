@@ -253,6 +253,11 @@ a,a:hover{
   display: block;
   margin-bottom: 74px;
 }
+@media screen and (max-height: 670px) {
+  .brand-pers__logo {
+    margin-bottom: 35px;
+  }
+}
 .brand-pers__text {
   font-family: "TT";
   font-size: 26px;
@@ -262,6 +267,11 @@ a,a:hover{
   text-align: center;
   color: #FFF;
   margin-bottom: 27px;
+}
+@media screen and (max-height: 600px) {
+  .brand-pers__text {
+    margin-bottom: 15px;
+  }
 }
 .brand-pers__buttons {
   display: flex;
@@ -320,6 +330,16 @@ a,a:hover{
   gap: 25px;
   margin-bottom: 65px;
   position: relative;
+}
+@media screen and (max-height: 670px) {
+  .brand-pers__swipers {
+    margin-bottom: 35px;
+  }
+}
+@media screen and (max-height: 600px) {
+  .brand-pers__swipers {
+    margin-bottom: 15px;
+  }
 }
 .brand-pers__swipers::after {
     content: '';

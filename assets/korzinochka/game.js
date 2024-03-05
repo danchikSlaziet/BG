@@ -47,19 +47,47 @@ endPageRestart.addEventListener('click', () => {
 
 let isFirstCollision = false;
 
-const playerImages = [
+let playerImages = [
   "./images/car.png",
-  "./images/car-setTime.png"
+  "./images/car-setTime.png",
 ];
+
 let currentPlayerImageIndex = 0; // Индекс текущего изображения игрока
-const playerImageObjects = playerImages.map(src => {
+let playerImageObjects = playerImages.map(src => {
   const image = new Image();
   image.src = src;
   return image;
 });
-function togglePlayerImage() {
-  currentPlayerImageIndex = (currentPlayerImageIndex + 1) % playerImageObjects.length;
-  player.image = playerImageObjects[currentPlayerImageIndex];
+
+function changeImagesToImmortal() {
+  playerImages = [
+    "", "./images/car-setTime.png", "", "./images/car.png"
+  ]
+  playerImageObjects = playerImages.map(src => {
+    const image = new Image();
+    image.src = src;
+    return image;
+  });
+}
+function changeImagesToMortal() {
+  playerImages = [
+    "./images/car.png",
+    "./images/car-setTime.png",
+  ];
+  playerImageObjects = playerImages.map(src => {
+    const image = new Image();
+    image.src = src;
+    return image;
+  });
+}
+
+setTimeout(() => {
+  
+}, 3000)
+
+function togglePlayerImage(objects) {
+  currentPlayerImageIndex = (currentPlayerImageIndex + 1) % objects.length;
+  player.image = objects[currentPlayerImageIndex];
 }
 let isPlayerImagesLoaded = false;
 let playerAnimationInterval = null;
@@ -240,10 +268,21 @@ var coins = [];
 var canvas = document.getElementById("canvas"); // Getting the canvas from DOM
 var ctx = canvas.getContext("2d"); // Getting the context to work with the canvas
 
+
+canvas.width = window.innerWidth; // Make the Canvas full screen
+canvas.height = window.innerHeight;
+// const originalWidth = canvas.width;
+// const originalHeight = canvas.height;
+// const scaleFactor = 2;
+// canvas.width = originalWidth * scaleFactor; // Увеличенная ширина
+// canvas.height = originalHeight * scaleFactor; // Увеличенная высота
+// canvas.style.width = originalWidth + 'px'; // Исходная ширина
+// canvas.style.height = originalHeight + 'px'; // Исходная высота
+// // Рисование на увеличенном холсте
+// ctx.scale(scaleFactor, scaleFactor);
+
 var scale = 0.16; // Cars scale
 var obstacleScale = 0.22;
-
-Resize(); // Changing the canvas size on startup
 
 window.addEventListener("resize", Resize); // Change the canvas size with the window size
 
@@ -292,7 +331,7 @@ function Start() {
   if (!player.dead) {
     animationId = requestAnimationFrame(Update);
     if (isPlayerImagesLoaded) {
-      playerAnimationInterval = setInterval(togglePlayerImage, 250);
+      playerAnimationInterval = setInterval(() => togglePlayerImage(playerImageObjects), 250);
     }
   }
 }
@@ -303,6 +342,7 @@ function Stop() {
   clearTimeout(obstacleGenerationTimeout);
   clearTimeout(coinGenerationTimeout);
   animationId = null;
+  playerAnimationInterval = null;
   obstacleGenerationTimeout = null;
   coinGenerationTimeout = null;
 }
@@ -403,8 +443,10 @@ let isObstacle = false;
 const livesArray = document.querySelectorAll(".top-bar__life");
 
 function decreaseLife() {
-  lives--;
-  livesArray[lives].classList.add('tob-bar__life_dead');
+  if (!isPlayerHit) {
+    lives--;
+    livesArray[lives].classList.add('tob-bar__life_dead');
+  }
   if (lives === 0) {
     maxScore ? null : (maxScore = scoreCount);
     scoreCount > maxScore ? (maxScore = scoreCount) : null;
@@ -415,8 +457,15 @@ function decreaseLife() {
     Stop();
     player.dead = true;
   }
+  else {
+    changeImagesToImmortal()
+    setTimeout(() => {
+      isPlayerHit = false;
+      changeImagesToMortal();
+    }, 2500)
+  }
 }
-
+let isPlayerHit = false;
 function Update() {
   roads[0].Update(roads[1]);
   roads[1].Update(roads[0]);
@@ -489,13 +538,11 @@ function Update() {
         isFirstCollision = true;
       }
       decreaseLife();
+      isPlayerHit = true;
       objects.splice(i, 1);
       break;
     }
   }
-  // if (hit) {
-  //         decreaseLife();
-  // }
 
   for (let i = 0; i < coins.length; i++) {
     hit = player.Collide(coins[i]);
@@ -567,6 +614,14 @@ function KeyDown(e) {
       // Right
       player.Move("x", "right");
       break;
+    case 65:
+      // Right
+      player.Move("x", "left");
+      break;
+    case 68:
+      // Right
+      player.Move("x", "right");
+      break;
   }
 }
 
@@ -590,6 +645,8 @@ function Restart() {
   // Очистить массивы объектов
   objects = [];
   coins = [];
+
+  isPlayerHit = false;
 
   // Сбросить позицию игрока
   player.x = canvas.width / 2 - carWidth;
