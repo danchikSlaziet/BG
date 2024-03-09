@@ -81,10 +81,6 @@ function changeImagesToMortal() {
   });
 }
 
-setTimeout(() => {
-  
-}, 3000)
-
 function togglePlayerImage(objects) {
   currentPlayerImageIndex = (currentPlayerImageIndex + 1) % objects.length;
   player.image = objects[currentPlayerImageIndex];

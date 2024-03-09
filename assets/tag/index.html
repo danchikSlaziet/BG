@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style.css">
+  <title>Document</title>
+</head>
+<body>
+  <div class="first-page first-page_active">
+    <img onclick="window.location.href='../../index.html'" class="first-page__exit-btn exit-btn" src="./images/exit-btn.svg" alt="">
+    <img class="first-page__memnashki" src="./images/first-page-memnashki.png" alt="">
+    <p class="first-page__title">
+      Собери мем<br>и узнай его историю
+    </p>
+    <p class="first-page__subtitle">
+      Классические пятнашки в&nbsp;неклассическом исполнении. Собирай мемы и&nbsp;узнавай об&nbsp;истории их&nbsp;происхождении.
+    </p>
+    <p class="first-page__subsubtitle">
+      Меньше касаний&nbsp;&mdash; больше очков, тыкай с&nbsp;умом
+    </p>
+    <button class="first-page__button" type="button">
+      Играть
+    </button>
+    <img class="first-page__img-help first-page__img-help_1" src="./images/first-page-smile1.png" alt="">
+    <img class="first-page__img-help first-page__img-help_2" src="./images/first-page-smile2.png" alt="">
+    <img class="first-page__img-help first-page__img-help_3" src="./images/first-page-smile3.png" alt="">
+    <img class="first-page__img-help first-page__img-help_4" src="./images/first-page-smile4.png" alt="">
+    <img class="first-page__img-help first-page__img-help_5" src="./images/first-page-smile5.png" alt="">
+    <img class="first-page__img-help first-page__img-help_ellipse" src="./images/first-page-ellipse.svg" alt="">
+  </div>
+  <div class="second-page">
+    <img class="second-page__exit-btn exit-btn" src="./images/exit-btn.svg" alt="">
+    <img class="second-page__ellipse" src="./images/first-page-ellipse.svg" alt="">
+    <p class="second-page__text">
+      Выберите свой мем
+    </p>
+    <div data-meme="meme1" class="second-page__level">
+      <div class="second-page__level-info">
+        <div class="second-page__level-img-block">
+          <img class="second-page__level-img" src="./images/second-page-memeImg1.png" alt="">
+          <p class="second-page__level-img-text">
+            Пройден
+          </p>
+        </div>
+        <div class="second-page__level-text-block">
+          <p class="second-page__level-number">Мем №1</p>
+          <p class="second-page__level-name">Палка в колеса</p>
+          <div class="second-page__level-ratings">
+            <div class="second-page__level-touches">
+              <img class="second-page__level-touches-img" src="./images/level-touch.svg" alt="">
+              <p class="second-page__level-touches-count">42</p>
+            </div>
+            <div class="second-page__level-coins">
+              <img class="second-page__level-coin-img" src="./images/level-coin.svg" alt="">
+              <p class="second-page__level-coin-count">4741</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="second-page__level-button" type="button">Пройти</button>
+    </div>
+    <div data-meme="meme2" class="second-page__level second-page__level_disable">
+      <p class="second-page__level-warning">
+        Пройдите 1 мем
+      </p>
+      <div class="second-page__level-blur">
+        <div class="second-page__level-info">
+          <div class="second-page__level-img-block">
+            <img class="second-page__level-img" src="./images/second-page-memeImg2.png" alt="">
+            <p class="second-page__level-img-text">
+              Пройден
+            </p>
+          </div>
+          <div class="second-page__level-text-block">
+            <p class="second-page__level-number">Мем №2</p>
+            <p class="second-page__level-name">Очки ннада?</p>
+            <div class="second-page__level-ratings">
+              <div class="second-page__level-touches">
+                <img class="second-page__level-touches-img" src="./images/level-touch.svg" alt="">
+                <p class="second-page__level-touches-count">42</p>
+              </div>
+              <div class="second-page__level-coins">
+                <img class="second-page__level-coin-img" src="./images/level-coin.svg" alt="">
+                <p class="second-page__level-coin-count">4741</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="second-page__level-button" type="button">Пройти</button>
+      </div>
+    </div>
+    <div data-meme="meme3" class="second-page__level second-page__level_disable">
+      <p class="second-page__level-warning">
+        Пройдите 2 мем
+      </p>
+      <div class="second-page__level-blur">
+        <div class="second-page__level-info">
+          <div class="second-page__level-img-block">
+            <img class="second-page__level-img" src="./images/second-page-memeImg3.png" alt="">
+            <p class="second-page__level-img-text">
+              Пройден
+            </p>
+          </div>
+          <div class="second-page__level-text-block">
+            <p class="second-page__level-number">Мем №3</p>
+            <p class="second-page__level-name">Сомневающийся фрай</p>
+            <div class="second-page__level-ratings">
+              <div class="second-page__level-touches">
+                <img class="second-page__level-touches-img" src="./images/level-touch.svg" alt="">
+                <p class="second-page__level-touches-count">42</p>
+              </div>
+              <div class="second-page__level-coins">
+                <img class="second-page__level-coin-img" src="./images/level-coin.svg" alt="">
+                <p class="second-page__level-coin-count">4741</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="second-page__level-button" type="button">Пройти</button>
+      </div>
+    </div>
+    <div data-meme="meme4" class="second-page__level second-page__level_disable">
+      <p class="second-page__level-warning">
+        Пройдите 3 мем
+      </p>
+      <div class="second-page__level-blur">
+        <div class="second-page__level-info">
+          <div class="second-page__level-img-block">
+            <img class="second-page__level-img" src="./images/second-page-memeImg4.png" alt="">
+            <p class="second-page__level-img-text">
+              Пройден
+            </p>
+          </div>
+          <div class="second-page__level-text-block">
+            <p class="second-page__level-number">Мем №4</p>
+            <p class="second-page__level-name">Гарольд скрывающий боль</p>
+            <div class="second-page__level-ratings">
+              <div class="second-page__level-touches">
+                <img class="second-page__level-touches-img" src="./images/level-touch.svg" alt="">
+                <p class="second-page__level-touches-count">42</p>
+              </div>
+              <div class="second-page__level-coins">
+                <img class="second-page__level-coin-img" src="./images/level-coin.svg" alt="">
+                <p class="second-page__level-coin-count">4741</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="second-page__level-button" type="button">Пройти</button>
+      </div>
+    </div>
+    <div data-meme="meme5" class="second-page__level second-page__level_disable">
+      <p class="second-page__level-warning">
+        Пройдите 4 мем
+      </p>
+      <div class="second-page__level-blur">
+        <div class="second-page__level-info">
+          <div class="second-page__level-img-block">
+            <img class="second-page__level-img" src="./images/second-page-memeImg5.png" alt="">
+            <p class="second-page__level-img-text">
+              Пройден
+            </p>
+          </div>
+          <div class="second-page__level-text-block">
+            <p class="second-page__level-number">Мем №5</p>
+            <p class="second-page__level-name">Девочка с хвостиками</p>
+            <div class="second-page__level-ratings">
+              <div class="second-page__level-touches">
+                <img class="second-page__level-touches-img" src="./images/level-touch.svg" alt="">
+                <p class="second-page__level-touches-count">42</p>
+              </div>
+              <div class="second-page__level-coins">
+                <img class="second-page__level-coin-img" src="./images/level-coin.svg" alt="">
+                <p class="second-page__level-coin-count">4741</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="second-page__level-button" type="button">Пройти</button>
+      </div>
+    </div>
+    <div data-meme="meme6" class="second-page__level second-page__level_disable">
+      <p class="second-page__level-warning">
+        Пройдите 5 мем
+      </p>
+      <div class="second-page__level-blur">
+        <div class="second-page__level-info">
+          <div class="second-page__level-img-block">
+            <img class="second-page__level-img" src="./images/second-page-memeImg6.png" alt="">
+            <p class="second-page__level-img-text">
+              Пройден
+            </p>
+          </div>
+          <div class="second-page__level-text-block">
+            <p class="second-page__level-number">Мем №6</p>
+            <p class="second-page__level-name">Кандибобер</p>
+            <div class="second-page__level-ratings">
+              <div class="second-page__level-touches">
+                <img class="second-page__level-touches-img" src="./images/level-touch.svg" alt="">
+                <p class="second-page__level-touches-count">42</p>
+              </div>
+              <div class="second-page__level-coins">
+                <img class="second-page__level-coin-img" src="./images/level-coin.svg" alt="">
+                <p class="second-page__level-coin-count">4741</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="second-page__level-button" type="button">Пройти</button>
+      </div>
+    </div>
+    <div data-meme="meme7" class="second-page__level second-page__level_disable">
+      <p class="second-page__level-warning">
+        Пройдите 6 мем
+      </p>
+      <div class="second-page__level-blur">
+        <div class="second-page__level-info">
+          <div class="second-page__level-img-block">
+            <img class="second-page__level-img" src="./images/second-page-memeImg7.png" alt="">
+            <p class="second-page__level-img-text">
+              Пройден
+            </p>
+          </div>
+          <div class="second-page__level-text-block">
+            <p class="second-page__level-number">Мем №7</p>
+            <p class="second-page__level-name">Ломай меня полностью</p>
+            <div class="second-page__level-ratings">
+              <div class="second-page__level-touches">
+                <img class="second-page__level-touches-img" src="./images/level-touch.svg" alt="">
+                <p class="second-page__level-touches-count">42</p>
+              </div>
+              <div class="second-page__level-coins">
+                <img class="second-page__level-coin-img" src="./images/level-coin.svg" alt="">
+                <p class="second-page__level-coin-count">4741</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="second-page__level-button" type="button">Пройти</button>
+      </div>
+    </div>
+    <div data-meme="meme8" class="second-page__level second-page__level_disable">
+      <p class="second-page__level-warning">
+        Пройдите 7 мем
+      </p>
+      <div class="second-page__level-blur">
+        <div class="second-page__level-info">
+          <div class="second-page__level-img-block">
+            <img class="second-page__level-img" src="./images/second-page-memeImg8.png" alt="">
+            <p class="second-page__level-img-text">
+              Пройден
+            </p>
+          </div>
+          <div class="second-page__level-text-block">
+            <p class="second-page__level-number">Мем №8</p>
+            <p class="second-page__level-name">Доге (Doge)</p>
+            <div class="second-page__level-ratings">
+              <div class="second-page__level-touches">
+                <img class="second-page__level-touches-img" src="./images/level-touch.svg" alt="">
+                <p class="second-page__level-touches-count">42</p>
+              </div>
+              <div class="second-page__level-coins">
+                <img class="second-page__level-coin-img" src="./images/level-coin.svg" alt="">
+                <p class="second-page__level-coin-count">4741</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="second-page__level-button" type="button">Пройти</button>
+      </div>
+    </div>
+    <div data-meme="meme9" class="second-page__level second-page__level_disable">
+      <p class="second-page__level-warning">
+        Пройдите 8 мем
+      </p>
+      <div class="second-page__level-blur">
+        <div class="second-page__level-info">
+          <div class="second-page__level-img-block">
+            <img class="second-page__level-img" src="./images/second-page-memeImg9.png" alt="">
+            <p class="second-page__level-img-text">
+              Пройден
+            </p>
+          </div>
+          <div class="second-page__level-text-block">
+            <p class="second-page__level-number">Мем №9</p>
+            <p class="second-page__level-name">И так сойдет</p>
+            <div class="second-page__level-ratings">
+              <div class="second-page__level-touches">
+                <img class="second-page__level-touches-img" src="./images/level-touch.svg" alt="">
+                <p class="second-page__level-touches-count">42</p>
+              </div>
+              <div class="second-page__level-coins">
+                <img class="second-page__level-coin-img" src="./images/level-coin.svg" alt="">
+                <p class="second-page__level-coin-count">4741</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="second-page__level-button" type="button">Пройти</button>
+      </div>
+    </div>
+    <div data-meme="meme10" class="second-page__level second-page__level_disable">
+      <p class="second-page__level-warning">
+        Пройдите 9 мем
+      </p>
+      <div class="second-page__level-blur">
+        <div class="second-page__level-info">
+          <div class="second-page__level-img-block">
+            <img class="second-page__level-img" src="./images/second-page-memeImg10.png" alt="">
+            <p class="second-page__level-img-text">
+              Пройден
+            </p>
+          </div>
+          <div class="second-page__level-text-block">
+            <p class="second-page__level-number">Мем №10</p>
+            <p class="second-page__level-name">Ну давай расскажи мне</p>
+            <div class="second-page__level-ratings">
+              <div class="second-page__level-touches">
+                <img class="second-page__level-touches-img" src="./images/level-touch.svg" alt="">
+                <p class="second-page__level-touches-count">42</p>
+              </div>
+              <div class="second-page__level-coins">
+                <img class="second-page__level-coin-img" src="./images/level-coin.svg" alt="">
+                <p class="second-page__level-coin-count">4741</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="second-page__level-button" type="button">Пройти</button>
+      </div>
+    </div>
+  </div>
+  <div class="tag">
+    <div class="tag__topbar topbar">
+      <img class="topbar__exit" src="./images/exit-btn.svg" alt="">
+      <div class="topbar__rating-block">
+        <p class="topbar__rating-count">
+          4741
+        </p>
+        <img class="topbar__rating-coin" src="./images/level-coin.svg" alt="">
+      </div>
+      <div class="topbar__touches">
+        <img class="topbar__touch-img" src="./images/level-touch.svg" alt="">
+        <p class="topbar__touch-count">0</p>
+      </div>
+    </div>
+    <canvas id="tag-canvas"></canvas>
+    <div class="tag__meme-info">
+      <p class="tag__meme-title">
+      </p>
+      <p class="tag__meme-text">
+      </p>
+    </div>
+  </div>
+  <div class="tag__overlay">
+    <div class="tag__overlay-content">
+      <img class="tag__overlay-img" src="./images/second-page-memeImg1.png" alt="">
+      <p class="tag__overlay-text">
+        Собрано 1/10
+      </p>
+      <div class="tag__info-block">
+        <div class="tag__touches">
+          <p class="tag__touches-text">
+            Касаний
+          </p>
+          <p class="tag__touches-count">
+            
+          </p>
+        </div>
+        <div class="tag__score-block">
+          <p class="tag__score-block-text">+Очков</p>
+          <p class="tag__score-block-count">52</p>
+        </div>
+      </div>
+      <div class="tag__buttons">
+        <img class="tag__overlay-restart" src="./images/overlay-restart.svg" alt="">
+        <button class="tag__overlay-button" type="button">Продолжить</button>
+      </div>
+    </div>
+    <button onclick="window.location.href='../../index.html'" class="tag__overlay-exit-btn" type="button">Выйти из игры</button>
+  </div>
+  <script src="./main.js"></script>
+</body>
+</html>
