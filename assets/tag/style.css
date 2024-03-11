@@ -26,6 +26,9 @@ body {
   font-family: "TT", sans-serif;
   color: #FFF;
 }
+html {
+  scroll-behavior: smooth;
+}
 *, *::after, *::before {
   margin: 0;
   padding: 0;
@@ -59,8 +62,7 @@ body {
   transition: visibility .25s, transform .25s linear, opacity .4s ease-in-out;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
-  overflow-y: visible;
+  overflow: hidden;
 }
 .first-page_active {
   visibility: visible;
@@ -87,6 +89,12 @@ body {
   margin: 94px auto 98px auto;
   padding-left: 39px;
   box-sizing: content-box;
+}
+@media screen and (max-height: 590px) {
+  .first-page__memnashki {
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
 }
 .first-page__title {
   margin: 0;
@@ -152,6 +160,11 @@ body {
   right: 59px;
   width: 61px;
 }
+@media screen and (max-height: 590px) {
+  .first-page__img-help_1 {
+    right: 32px;
+  }
+}
 .first-page__img-help_2 {
   width: 100px;
   left: 0;
@@ -167,10 +180,22 @@ body {
   top: 247px;
   left: 142px;
 }
+@media screen and (max-height: 590px) {
+  .first-page__img-help_4 {
+    top: 144px;
+  }
+}
+
 .first-page__img-help_5 {
   width: 150px;
   top: 150px;
   right: 0;
+}
+@media screen and (max-height: 590px) {
+  .first-page__img-help_5 {
+    top: 84px;
+    right: -44px;
+  }
 }
 .first-page__img-help_ellipse {
   position: absolute;
@@ -199,7 +224,7 @@ body {
   background: #350b4b;                                          
   pointer-events: none;
   font-weight: 400;
-  position: fixed;
+  /* position: fixed; */
   width: 100%;
   height: 100%;
   top: 0;
@@ -210,7 +235,8 @@ body {
   transition: visibility .25s, transform .25s linear, opacity .4s ease-in-out;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 .tag_active {
   visibility: visible;
@@ -500,8 +526,6 @@ body {
 }
 
 .tag__meme-info {
-  height: 200px;
-  overflow-y: scroll;
   background-color: rgba(0, 0, 0, 0.15);
   padding: 24px 20px;
   border-radius: 25px 25px 0 0;

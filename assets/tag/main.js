@@ -464,7 +464,12 @@ Game.prototype.mix = function (count) {
   this.clicks = 0;
   topBarTouches.textContent = 0;
 };
-
+document.getElementById("tag-canvas").addEventListener('click', () => {
+  tagPage.scrollTo({
+    top: 0, // установим скроллл  на величину 1000px
+    behavior: "smooth" // используем плавный скролл
+  });
+});
 function startGame(meme) {
   let canvas = document.getElementById("tag-canvas");
   canvas.width = window.innerWidth;
@@ -643,4 +648,4 @@ secondPageLevelButtons.forEach((elem) => {
       }
     }
   })
-})
+});
